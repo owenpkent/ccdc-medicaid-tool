@@ -142,5 +142,19 @@
   "fill.doneBody": "Open it and check every page. Sign by hand where needed. Nothing was sent anywhere; the file is only on your device.",
   "fill.startOver": "Back to the form",
   "fill.scrub": "Clear sensitive fields",
-  "fill.scrubbedNotice": "Cleared SSN, date of birth, bank, and ID numbers from this screen. Saved info is separate; use Delete saved info to remove it too."
+  "fill.scrubbedNotice": "Cleared SSN, date of birth, bank, and ID numbers from this screen. Saved info is separate; use Delete saved info to remove it too.",
+  "fill.scanLegend": "Scan your documents (read on this device, never uploaded)",
+  "fill.scanHelp": "A photo of a document fills the matching fields for you. Every value still goes through the review step before any PDF is made.",
+  "fill.scanLicense": "Driver's license barcode (back of card)",
+  "fill.scanLicenseFront": "Driver's license front (if the barcode won't scan)",
+  "fill.scanPassport": "Passport photo page",
+  "fill.scanSsnCard": "Social Security card",
+  "fill.scanBusy": "Reading the document on this device…",
+  "fill.scanDone": "Read {count} fields from {source}. Check every value below.",
+  "fill.scanUnverified": "The passport number did not pass its check digit; compare it against the document.",
+  "fill.demoRowLabel": "Just exploring? Everything here is clearly fictional:",
+  "fill.demoLoadPerson": "Load the example person",
+  "fill.demoScanId": "Scan the example ID",
+  "fill.demoLoadedNotice": "Loaded the fictional example person. Every value is made up; check the form below.",
+  "fill.demoScanError": "Could not load the example ID image."
 }

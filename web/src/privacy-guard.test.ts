@@ -67,8 +67,12 @@ describe("privacy guard (nothing persists by default)", () => {
   });
 
   it("keeps tesseract's model cache disabled", () => {
-    const ocr = sourceFiles.find((f) => f.endsWith("lib/ocr.ts"));
-    expect(ocr).toBeTruthy();
-    expect(readFileSync(ocr as string, "utf8")).toMatch(/cacheMethod:\s*"none"/);
+    // Both tesseract entry points: the read side's OCR and the fill flow's
+    // document scanner.
+    for (const name of ["lib/ocr.ts", "lib/extract/scanner.ts"]) {
+      const f = sourceFiles.find((p) => p.endsWith(name));
+      expect(f, name).toBeTruthy();
+      expect(readFileSync(f as string, "utf8")).toMatch(/cacheMethod:\s*"none"/);
+    }
   });
 });

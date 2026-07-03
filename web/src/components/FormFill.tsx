@@ -14,9 +14,17 @@ import {
 } from "../lib/profile/schema";
 import { fillPacket2026, type FillPacketOptions } from "../lib/fill/forms/packet2026";
 import { importPacket2026 } from "../lib/extract/packet2026";
+import {
+  scanLicense,
+  scanLicenseFront,
+  scanPassport,
+  scanSsnCard,
+  type ScanResult,
+} from "../lib/extract/scanner";
 import { todayIso } from "../lib/fill/util";
 import { downloadPdfBytes } from "../lib/download";
 import { saveArchive, loadArchive, clearArchive, type ArchiveData } from "../lib/archive";
+import { EXAMPLE_PERSON_PROFILE, EXAMPLE_PERSON_EMPLOYER } from "../fixtures/examplePerson";
 
 /**
  * The review-and-generate flow (form-fill-engine.md step 9), early preview.
@@ -47,6 +55,7 @@ export function FormFill() {
   const [genError, setGenError] = useState(false);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
+  const [scanning, setScanning] = useState(false);
 
   // The saved archive, held until the user explicitly chooses to load it.
   const pending = useRef<ArchiveData | null>(null);
@@ -127,6 +136,65 @@ export function FormFill() {
     setNotice(intl.formatMessage({ id: "fill.scrubbedNotice" }));
   }
 
+  // Merge scanned document fields into the profile. Only keys the schema knows
+  // are applied (the parsers may report extras like passportCountry), and a
+  // passport number that failed its MRZ check digit is still shown but called
+  // out so the review step compares it against the document.
+  function applyScan(res: ScanResult) {
+    const known = new Set(Object.keys(blankProfile()));
+    const fields = res.fields as Record<string, string>;
+    const applied: Record<string, string> = {};
+    for (const [k, v] of Object.entries(fields)) if (known.has(k) && v) applied[k] = v;
+    const unverified = fields.passportNumberUnverified;
+    if (unverified && !applied.passportNumber) applied.passportNumber = unverified;
+    setProfile((prev) => ({ ...prev, ...applied }) as Profile);
+    let msg = intl.formatMessage(
+      { id: "fill.scanDone" },
+      { count: Object.keys(applied).length, source: res.source },
+    );
+    if (unverified) msg += " " + intl.formatMessage({ id: "fill.scanUnverified" });
+    setNotice(msg);
+  }
+
+  // Scan a document image. All decoding happens in this browser (zxing-wasm /
+  // tesseract.js served from our own origin); the image never leaves the device.
+  async function runScan(file: Blob, scan: (f: Blob) => Promise<ScanResult>) {
+    setScanning(true);
+    setNotice(intl.formatMessage({ id: "fill.scanBusy" }));
+    try {
+      applyScan(await scan(file));
+    } catch (err) {
+      setNotice(err instanceof Error && err.message ? err.message : "Could not read that image.");
+    } finally {
+      setScanning(false);
+    }
+  }
+
+  // Demo affordances: a clearly-fictional example person, and a fictional
+  // sample license barcode that runs through the real decode path.
+  function loadExamplePerson() {
+    setProfile((prev) => ({ ...prev, ...EXAMPLE_PERSON_PROFILE }) as Profile);
+    setEmployer((prev) => ({ ...prev, ...EXAMPLE_PERSON_EMPLOYER }) as Employer);
+    setNotice(intl.formatMessage({ id: "fill.demoLoadedNotice" }));
+  }
+
+  async function scanExampleId() {
+    setScanning(true);
+    setNotice(intl.formatMessage({ id: "fill.scanBusy" }));
+    let blob: Blob;
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}examples/example-license-barcode.png`);
+      if (!res.ok) throw new Error(String(res.status));
+      blob = await res.blob();
+    } catch {
+      setNotice(intl.formatMessage({ id: "fill.demoScanError" }));
+      setScanning(false);
+      return;
+    }
+    setScanning(false);
+    await runScan(blob, scanLicense);
+  }
+
   // Carry-forward: copy the typed answers out of a previously filled packet.
   // The result lands in the editable form, never straight into generate; the
   // check-every-answer review still stands between the import and the PDF.
@@ -203,6 +271,54 @@ export function FormFill() {
           <p className="fill-note">
             <FormattedMessage id="fill.editHelp" />
           </p>
+
+          <fieldset className="fill-section">
+            <legend>{intl.formatMessage({ id: "fill.scanLegend" })}</legend>
+            <p className="fill-note">
+              <FormattedMessage id="fill.scanHelp" />
+            </p>
+            <div className="fill-grid">
+              <ScanInput
+                id="ff-scan-license"
+                label={intl.formatMessage({ id: "fill.scanLicense" })}
+                disabled={scanning}
+                onFile={(f) => void runScan(f, scanLicense)}
+              />
+              <ScanInput
+                id="ff-scan-licensefront"
+                label={intl.formatMessage({ id: "fill.scanLicenseFront" })}
+                disabled={scanning}
+                onFile={(f) => void runScan(f, scanLicenseFront)}
+              />
+              <ScanInput
+                id="ff-scan-passport"
+                label={intl.formatMessage({ id: "fill.scanPassport" })}
+                disabled={scanning}
+                onFile={(f) => void runScan(f, scanPassport)}
+              />
+              <ScanInput
+                id="ff-scan-ssncard"
+                label={intl.formatMessage({ id: "fill.scanSsnCard" })}
+                disabled={scanning}
+                onFile={(f) => void runScan(f, scanSsnCard)}
+              />
+            </div>
+            <p className="fill-note">
+              <FormattedMessage id="fill.demoRowLabel" />
+            </p>
+            <div className="fill-actions">
+              <Button className="btn btn-secondary" isDisabled={scanning} onPress={loadExamplePerson}>
+                {intl.formatMessage({ id: "fill.demoLoadPerson" })}
+              </Button>
+              <Button
+                className="btn btn-secondary"
+                isDisabled={scanning}
+                onPress={() => void scanExampleId()}
+              >
+                {intl.formatMessage({ id: "fill.demoScanId" })}
+              </Button>
+            </div>
+          </fieldset>
 
           <fieldset className="fill-section">
             <legend>{intl.formatMessage({ id: "fill.importLegend" })}</legend>
@@ -371,6 +487,33 @@ export function FormFill() {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+interface ScanInputProps {
+  id: string;
+  label: string;
+  disabled: boolean;
+  onFile: (file: File) => void;
+}
+
+function ScanInput({ id, label, disabled, onFile }: ScanInputProps) {
+  return (
+    <div className="fill-field">
+      <label htmlFor={id}>{label}</label>
+      <input
+        id={id}
+        type="file"
+        accept="image/*"
+        disabled={disabled}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          // Clear so choosing the same photo again re-triggers the scan.
+          e.target.value = "";
+          if (f) onFile(f);
+        }}
+      />
     </div>
   );
 }

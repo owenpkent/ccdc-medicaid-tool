@@ -142,5 +142,19 @@
   "fill.doneBody": "Ábralo y revise cada página. Firme a mano donde haga falta. No se envió nada; el archivo está solo en su dispositivo.",
   "fill.startOver": "Volver al formulario",
   "fill.scrub": "Borrar los campos sensibles",
-  "fill.scrubbedNotice": "Se borraron el SSN, la fecha de nacimiento, y los números de banco y de identificación de esta pantalla. Lo guardado es aparte; use Borrar lo guardado para eliminarlo también."
+  "fill.scrubbedNotice": "Se borraron el SSN, la fecha de nacimiento, y los números de banco y de identificación de esta pantalla. Lo guardado es aparte; use Borrar lo guardado para eliminarlo también.",
+  "fill.scanLegend": "Escanear sus documentos (se leen en este dispositivo, nunca se suben)",
+  "fill.scanHelp": "Una foto de un documento llena los campos correspondientes por usted. Cada valor pasa igual por el paso de revisión antes de crear cualquier PDF.",
+  "fill.scanLicense": "Código de barras de la licencia de conducir (reverso)",
+  "fill.scanLicenseFront": "Frente de la licencia de conducir (si el código de barras no escanea)",
+  "fill.scanPassport": "Página de la foto del pasaporte",
+  "fill.scanSsnCard": "Tarjeta de Seguro Social",
+  "fill.scanBusy": "Leyendo el documento en este dispositivo…",
+  "fill.scanDone": "Se leyeron {count} campos de {source}. Revise cada valor abajo.",
+  "fill.scanUnverified": "El número de pasaporte no pasó su dígito de control; compárelo con el documento.",
+  "fill.demoRowLabel": "¿Solo explorando? Todo aquí es claramente ficticio:",
+  "fill.demoLoadPerson": "Cargar la persona de ejemplo",
+  "fill.demoScanId": "Escanear la identificación de ejemplo",
+  "fill.demoLoadedNotice": "Se cargó la persona ficticia de ejemplo. Todos los valores son inventados; revise el formulario abajo.",
+  "fill.demoScanError": "No se pudo cargar la imagen de la identificación de ejemplo."
 }

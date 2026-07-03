@@ -100,8 +100,8 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         runtimeCaching: [
           {
-            urlPattern: ({ url, sameOrigin }) =>
-              sameOrigin && url.pathname.includes("/vendor/tesseract/"),
+            // All vendored decode assets: tesseract (OCR) and zxing (barcodes).
+            urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.includes("/vendor/"),
             handler: "CacheFirst",
             options: {
               cacheName: "ocr-assets",

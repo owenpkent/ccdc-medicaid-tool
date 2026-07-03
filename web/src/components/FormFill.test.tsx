@@ -43,6 +43,29 @@ describe("FormFill", () => {
     expect(screen.getByRole("button", { name: /generate the filled pdf/i })).toBeInTheDocument();
   });
 
+  it("renders the document-scan inputs (scans stay on-device)", () => {
+    renderWithProviders(<FormFill />);
+    expect(screen.getByLabelText(/driver's license barcode/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/driver's license front/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/passport photo page/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/social security card/i)).toBeInTheDocument();
+  });
+
+  it("loads the fictional example person into the form for the demo", () => {
+    renderWithProviders(<FormFill />);
+    fireEvent.click(screen.getByRole("button", { name: /load the example person/i }));
+
+    expect(screen.getByLabelText("First name")).toHaveValue("Jane");
+    expect(screen.getByLabelText("Last name")).toHaveValue("Doe");
+    // The fictional markers hold: the canonical fake SSN, filled from the fixture.
+    expect(screen.getByLabelText("Social Security Number")).toHaveValue("123-45-6789");
+
+    // The review step still stands between the demo data and any PDF.
+    fireEvent.click(screen.getByRole("button", { name: /review my answers/i }));
+    expect(screen.getByText("Jane")).toBeInTheDocument();
+    expect(screen.getByText("Example Bank")).toBeInTheDocument();
+  });
+
   it("has no axe-detectable accessibility violations in the edit phase", async () => {
     const { container } = renderWithProviders(<FormFill />);
     expect(await axeViolations(container)).toEqual([]);

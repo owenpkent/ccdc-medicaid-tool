@@ -1,7 +1,8 @@
-// Vendor the OCR runtime assets (tesseract.js worker, WASM cores, and language
-// data) from node_modules into web/public/vendor so the page never fetches them
-// from a CDN at runtime. This is what makes the "zero third-party network"
-// privacy promise hold for the photo-OCR path: every byte tesseract needs is
+// Vendor the OCR and barcode runtime assets (tesseract.js worker, WASM cores,
+// language data, and the zxing-wasm barcode reader) from node_modules into
+// web/public/vendor so the page never fetches them from a CDN at runtime. This
+// is what makes the "zero third-party network" privacy promise hold for the
+// photo-OCR and document-scan paths: every byte tesseract and zxing need is
 // served from our own origin (and cached for offline by the service worker).
 //
 // The copied files are gitignored. They are reproducible from the pinned
@@ -18,12 +19,17 @@ const web = resolve(here, "..");
 const nm = resolve(web, "node_modules");
 const out = resolve(web, "public", "vendor", "tesseract");
 const tessdataOut = resolve(out, "tessdata");
+const zxingOut = resolve(web, "public", "vendor", "zxing");
 
 const force = process.argv.includes("--force");
 
 // Cheap skip: if the assets are already in place, don't recopy ~27 MB on every
 // `npm run dev`. Pass --force to refresh after upgrading the OCR packages.
-const sentinels = [resolve(out, "worker.min.js"), resolve(tessdataOut, "eng.traineddata.gz")];
+const sentinels = [
+  resolve(out, "worker.min.js"),
+  resolve(tessdataOut, "eng.traineddata.gz"),
+  resolve(zxingOut, "zxing_reader.wasm"),
+];
 if (!force && sentinels.every((f) => existsSync(f))) {
   console.log("tesseract assets already vendored (pass --force to refresh)");
   process.exit(0);
@@ -31,7 +37,9 @@ if (!force && sentinels.every((f) => existsSync(f))) {
 
 // Fresh each run so a removed/renamed upstream file never lingers.
 rmSync(out, { recursive: true, force: true });
+rmSync(zxingOut, { recursive: true, force: true });
 mkdirSync(tessdataOut, { recursive: true });
+mkdirSync(zxingOut, { recursive: true });
 
 function copy(from, to) {
   if (!existsSync(from)) {
@@ -68,4 +76,11 @@ copy(
   resolve(tessdataOut, "spa.traineddata.gz"),
 );
 
-console.log(`Vendored tesseract assets into ${out}`);
+// zxing-wasm reader (PDF417 barcode decoding for driver's licenses, used by
+// the fill flow's document scanner in lib/extract/scanner.ts).
+copy(
+  resolve(nm, "zxing-wasm/dist/reader/zxing_reader.wasm"),
+  resolve(zxingOut, "zxing_reader.wasm"),
+);
+
+console.log(`Vendored tesseract assets into ${out} and zxing into ${zxingOut}`);
