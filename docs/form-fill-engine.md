@@ -131,10 +131,23 @@ early preview at the `#fill` view (`web/src/components/FormFill.tsx`,
 schema-driven, edit then check-every-answer review then generate, behind the
 same consent gate as triage), and the personal archive persists through the
 single audited storage module `web/src/lib/archive.ts` (IndexedDB, strictly
-opt-in save, one-button delete, scrub-sensitive after generate). Remaining: the
-Medicaid schema sections (step 3, needs CCDC input), capture reuse (step 7),
-CCDC review of the preview, and its Spanish field labels. The numbered plan
-below is kept for the record.
+opt-in save, one-button delete, scrub-sensitive after generate).
+
+**Status (2026-07-02): capture is ported (step 7).** The CDASS Enroll capture
+pipeline lives in `web/src/lib/extract`: driver's-license PDF417 barcode
+decoding (zxing-wasm, WASM vendored to our origin by
+`web/scripts/vendor-ocr.mjs`), a license-front OCR fallback, passport MRZ
+parsing with check-digit validation, and Social Security card OCR with a
+digits-only second pass, behind shared image enhancement. The `#fill` view's
+"Scan your documents" section feeds every scanned value through the same
+check-every-answer review. For demonstrations without real documents, a
+clearly-fictional example person (`web/src/fixtures/examplePerson.ts`) and a
+committed scannable example ID
+(`web/public/examples/example-license-barcode.png`, a PDF417 encoding the same
+fictional identity) exercise the real decode path. Remaining: the Medicaid
+schema sections (step 3, needs CCDC input), tax-document reading on top of the
+ported capture, CCDC review of the preview, and its Spanish field labels. The
+numbered plan below is kept for the record.
 
 1. Add `pdf-lib` to `web/package.json`. Lazy-import it, like pdf.js and
    tesseract.js, so it loads only when a form is generated.
@@ -178,9 +191,10 @@ top of it is new.
   Schedule SE), and the exemption-packet cover-letter and labeled-exhibit
   assembly. (pdf-lib can also build a PDF from scratch, which is beyond the fill
   pattern.) Carry-forward pre-fill across years is new here too.
-- **Not central here:** the driver's-license PDF417 barcode path. Medicaid
-  packets do not need it for filling, though the engine still offers it for
-  identity capture and the OCR methodology around it carries over.
+- **Not central here, but ported anyway:** the driver's-license PDF417 barcode
+  path. Medicaid packets do not need it for filling, but the engine offers it
+  for identity capture (it is the most reliable scan), and porting it brought
+  the whole capture pipeline and its OCR methodology along.
 
 ## Constraint alignment
 

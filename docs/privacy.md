@@ -53,8 +53,8 @@ This is the honest tradeoff. We name it instead of hiding it.
 The production build ships a Content-Security-Policy. The key directive is
 `connect-src 'self'`, which blocks the page from sending anything to a third
 party: that is what enforces "no data leaves the device" in the browser, not just
-in policy. The OCR and PDF assets are served from our own origin, so they still
-load.
+in policy. The OCR, barcode (zxing-wasm), and PDF assets are served from our own
+origin, so they still load.
 
 Two delivery details matter:
 

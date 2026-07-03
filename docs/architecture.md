@@ -267,17 +267,20 @@ web/src/
 |   `-- NextActions.tsx       1-3 concrete next actions
 |-- lib/
 |   |-- pdf.ts                pdf.js wrapper (read side)
-|   |-- ocr.ts               tesseract.js wrapper (read + capture)
+|   |-- ocr.ts               tesseract.js wrapper (read side; the scanner keeps its own worker)
 |   |-- rules.ts             loads rules/co/*.yaml; classification logic
 |   |-- deadline.ts          deadline extraction
 |   |-- plainLanguage.ts     explanation strings keyed by letter type
 |   |-- profile/
 |   |   `-- schema.ts        the archive shape (the engine's source of truth)
 |   |-- extract/             capture pipeline ported from CDASS Enroll
-|   |   |-- scanner.ts       orchestration: enhance, digit pass, crop
+|   |   |-- scanner.ts       orchestration: enhance, shared OCR worker, digit pass
 |   |   |-- aamva.ts         AAMVA PDF417 (zxing-wasm)
 |   |   |-- mrz.ts           passport MRZ with check digits
-|   |   `-- ...              award-letter / tax-form readers (new)
+|   |   |-- ssncard.ts       Social Security card OCR
+|   |   |-- dlfront.ts       license-front OCR fallback
+|   |   |-- packet2026.ts    carry-forward import from a filled packet
+|   |   `-- ...              award-letter / tax-form readers (future)
 |   `-- fill/                the write side (pure functions over pdf-lib)
 |       |-- util.ts          tolerant pdf-lib helpers (missing field warns)
 |       |-- fillForm.ts      load template, set fields, save without flatten

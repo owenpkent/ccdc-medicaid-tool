@@ -43,7 +43,7 @@ Ships before the first wave of notification letters goes out from HCPF in August
 
 Ships before the first impact wave on 2027-01-01.
 
-The write side is already proven. The CDASS Enroll proof of concept is a working, local-first form-autofill engine: one schema is the source of truth, a capture pipeline fills the profile from documents the person already holds, and pure functions over pdf-lib map profile values to exact PDF field names and save the official template's AcroForm without flattening, producing an exact, still-editable copy. v0.2 is about adopting and mapping that engine for Medicaid forms, not inventing it. See [`form-fill-engine.md`](form-fill-engine.md).
+The write side is already proven. The CDASS Enroll proof of concept is a working, local-first form-autofill engine: one schema is the source of truth, a capture pipeline fills the profile from documents the person already holds, and pure functions over pdf-lib map profile values to exact PDF field names and save the official template's AcroForm without flattening, producing an exact, still-editable copy. v0.2 is about adopting and mapping that engine for Medicaid forms, not inventing it. The capture pipeline itself is ported as of 2026-07-02 (license barcode, license front, passport MRZ, and Social Security card, all decoded on-device in the `#fill` preview); the Medicaid-specific document readers below build on it. See [`form-fill-engine.md`](form-fill-engine.md).
 
 - [ ] Document classifier for SSA award letters and waiver enrollment letters
 - [ ] Tax-return reader for W-2 / 1099-NEC / Schedule C / Schedule SE (PDF, not IRS API)
