@@ -81,6 +81,9 @@ form. These layers are what Coverage Compass adopts.
                     Fill the official template's form fields
                       (AcroForm, never flattened, editable)
                                        |
+                    On-screen review + optional signature
+                       (pdf.js render, pdf-lib stamp)
+                                       |
                          Local download (no upload)
 ```
 
@@ -119,6 +122,13 @@ The layers, in order:
   - **Fact-asserting checkboxes are gated on unambiguous data.** A live-in
     relationship, an age threshold, a tax status: only checked when the stored
     data unambiguously supports it. Anything uncertain is left for the human.
+- **On-screen review and sign (early preview).** The filled packet is rendered
+  in the browser with pdf.js (reusing the read side's same-origin worker and
+  `isEvalSupported: false`) so the person can review it before saving. They can
+  optionally add a signature, drawn or typed, place it on a page, and it is
+  stamped in with pdf-lib, still without flattening. Storage-free (in-memory
+  state only). See `components/PdfReview.tsx`, `components/SignatureDialog.tsx`,
+  and `lib/viewer.ts`.
 - **Local download.** The filled bytes are handed to the browser as a download.
   Nothing is uploaded.
 - **Exact-copy smoke test.** A regression test reloads the output and asserts the
@@ -267,6 +277,7 @@ web/src/
 |   `-- NextActions.tsx       1-3 concrete next actions
 |-- lib/
 |   |-- pdf.ts                pdf.js wrapper (read side)
+|   |-- viewer.ts             on-screen PDF render + signature stamping (review/sign)
 |   |-- ocr.ts               tesseract.js wrapper (read side; the scanner keeps its own worker)
 |   |-- rules.ts             loads rules/co/*.yaml; classification logic
 |   |-- deadline.ts          deadline extraction

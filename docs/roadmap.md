@@ -48,7 +48,7 @@ The write side is already proven. The CDASS Enroll proof of concept is a working
 - [ ] Document classifier for SSA award letters and waiver enrollment letters
 - [ ] Tax-return reader for W-2 / 1099-NEC / Schedule C / Schedule SE (PDF, not IRS API)
 - [ ] Exemption decision tree (SSDI -> HCBS -> LTSS -> Buy-In -> medically frail -> caregiver)
-- [ ] Packet template generator (PDF output with cover letter and labeled exhibits). The engine adoption is done (2026-07-02): the ported fill layer generates the real CDASS packet in the demo's `#fill` preview; what remains here is the Medicaid form mappings and the cover-letter/exhibit assembly; see [`form-fill-engine.md`](form-fill-engine.md)
+- [ ] Packet template generator (PDF output with cover letter and labeled exhibits). The engine adoption is done (2026-07-02): the ported fill layer generates the real CDASS packet in the demo's `#fill` preview, shown for on-screen review and optional signing before download; what remains here is the Medicaid form mappings and the cover-letter/exhibit assembly; see [`form-fill-engine.md`](form-fill-engine.md)
 - [ ] Carry-forward pre-fill: keep the archive across years and pre-fill next year's renewal and redetermination from the prior filing, turning a multi-page yearly form into a review-and-correct step. The mechanism shipped 2026-07-02 for the CDASS packet (import a previously filled packet, review, generate); extending it to Medicaid renewals awaits the form mappings
 - [ ] CDASS care-hours worksheet pre-fill: carry the itemized minutes-per-task care plan (the IHSS Care Plan) forward from the prior worksheet and the archive
 - [ ] Renewal calendar with deadline tracking (IndexedDB, local only)
