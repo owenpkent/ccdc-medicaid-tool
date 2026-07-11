@@ -5,11 +5,9 @@
   "lang.label": "Idioma",
   "lang.en": "English",
   "lang.es": "Español",
-
   "hero.title": "¿Recibió una carta de Health First Colorado?",
   "hero.body": "Súbala aquí. Le diremos qué dice, qué hacer y cuándo. Su carta nunca sale de este dispositivo.",
   "hero.privacy": "Sin cuentas. Sin rastreo. Sin servidor. Todo pasa en su navegador.",
-
   "drop.prompt": "Suelte su carta aquí",
   "drop.or": "o",
   "drop.cta": "Elegir un archivo",
@@ -17,12 +15,10 @@
   "drop.aria": "Suelte aquí un PDF o una foto de su carta, o presione Enter para elegir un archivo.",
   "drop.reading": "Leyendo {name}…",
   "drop.recognizing": "Leyendo la foto…",
-
   "paste.toggle": "O pegue el texto en su lugar",
   "paste.label": "Pegue las palabras de su carta",
   "paste.placeholder": "Escriba o pegue lo que dice la carta…",
   "paste.button": "Revisar este texto",
-
   "result.heading": "Esto es lo que encontramos",
   "result.typeHeading": "Qué es esta carta",
   "result.meaningHeading": "Qué significa",
@@ -34,7 +30,6 @@
   "result.download": "Descargar un resumen de una página",
   "result.another": "Revisar otra carta",
   "result.disclaimer": "Esta herramienta da información, no consejo legal. No presenta nada por usted. Para ayuda, llame a CCDC.",
-
   "deadline.heading": "Fecha límite",
   "deadline.daysLeft": "{days, plural, one {# día restante} other {# días restantes}}",
   "deadline.today": "Vence hoy",
@@ -43,11 +38,9 @@
   "deadline.typicalWindow": "Cartas como esta suelen dar unos {days} días. Busque la fecha impresa en su carta.",
   "deadline.noWindow": "Busque la fecha impresa en su carta. Si no está seguro, llame a CCDC.",
   "deadline.estimateNote": "Leímos esta fecha de su carta. Siempre confírmela con la carta misma.",
-
   "urgency.now": "Haga esto ahora",
   "urgency.this-week": "Esta semana",
   "urgency.this-month": "Este mes",
-
   "status.working": "Trabajando…",
   "error.heading": "No pudimos leer eso",
   "error.encrypted": "Este PDF está protegido con contraseña. Ábralo, quite la contraseña y guarde una copia nueva. Luego intente de nuevo.",
@@ -58,29 +51,23 @@
   "error.heic": "Las fotos de iPhone guardadas como HEIC no se pueden leer aquí. En su iPhone, abra Configuración, luego Cámara, luego Formatos, y elija \"Más compatible.\" Tome la foto otra vez e intente de nuevo. O suba la carta como PDF.",
   "error.generic": "Algo salió mal al leer su carta. Por favor intente de nuevo, o pegue el texto en su lugar.",
   "error.tryAgain": "Probar otra carta",
-
   "how.title": "Cómo funciona",
   "how.step1": "Suba un PDF o una foto de su carta.",
   "how.step2": "La leemos en su dispositivo. No se sube nada.",
   "how.step3": "Verá un resumen en lenguaje sencillo, la fecha límite y qué hacer.",
-
   "footer.builtWith": "Hecho con la Colorado Cross-Disability Coalition (CCDC). Código abierto.",
   "footer.help": "¿Necesita ayuda ahora? Llame a CCDC al {phone}.",
   "footer.privacyLink": "Aviso de privacidad",
   "footer.termsLink": "Términos de uso",
   "footer.sourceLink": "Código fuente",
-
   "theme.label": "Colores",
   "theme.light": "Claro",
   "theme.dark": "Oscuro",
-
   "legal.back": "Volver a la herramienta",
   "legal.updated": "Última actualización: {date}",
   "legal.draftNote": "Borrador para el período de demostración. Todavía no ha sido revisado por un abogado.",
   "consent.legalLinks": "Al continuar, usted también acepta los {terms} y el {privacy}.",
-
   "app.demoBadge": "Demo",
-
   "consent.title": "Antes de empezar",
   "consent.demoNotice": "Esto es una demostración. Es una versión temprana, mostrada para recibir comentarios. Todavía no es un servicio público.",
   "consent.intro": "Por favor lea esto, y luego acepte al final.",
@@ -91,18 +78,15 @@
   "consent.noWarranty": "Sin garantía. Esta herramienta gratuita se ofrece tal como está. Al continuar, usted acepta que las personas y organizaciones que la hicieron no son responsables de las decisiones que usted tome basándose en ella, ni de ninguna pérdida relacionada con su uso.",
   "consent.help": "¿Preguntas, o necesita ayuda ahora? Llame a CCDC al {phone}.",
   "consent.agree": "Entiendo y acepto",
-
   "examples.heading": "¿Solo mirando? Pruebe un ejemplo",
   "examples.note": "Estas cartas de muestra son inventadas para la demostración. No son de ninguna persona real.",
   "examples.termination": "Cobertura terminando: papeles faltantes",
   "examples.renewal": "Paquete de renovación (carta en español)",
   "examples.workreq": "Nuevo aviso de reporte de trabajo",
   "examples.denial": "Exención negada",
-
   "fillTeaser.title": "Pruebe el llenador de formularios (vista previa)",
   "fillTeaser.body": "Estamos construyendo la otra mitad de Coverage Compass: llenar formularios oficiales con información que usted ingresa una sola vez. El primer formulario es el paquete de inscripción de asistente CDASS/PPL. Todo se queda en su dispositivo.",
   "fillTeaser.link": "Llenar el paquete de asistente CDASS",
-
   "fill.title": "Llenar un formulario (vista previa)",
   "fill.previewNote": "Vista previa temprana. Este llenador todavía no ha sido revisado por CCDC, y esta página está solo en inglés por ahora. Sus respuestas se quedan en este dispositivo. Las líneas de firma se dejan para que usted firme a mano. Nada se envía a ningún lado.",
   "fill.formName": "Formulario: Paquete de inscripción de asistente CDASS/PPL (2026)",
@@ -156,5 +140,33 @@
   "fill.demoLoadPerson": "Cargar la persona de ejemplo",
   "fill.demoScanId": "Escanear la identificación de ejemplo",
   "fill.demoLoadedNotice": "Se cargó la persona ficticia de ejemplo. Todos los valores son inventados; revise el formulario abajo.",
-  "fill.demoScanError": "No se pudo cargar la imagen de la identificación de ejemplo."
+  "fill.demoScanError": "No se pudo cargar la imagen de la identificación de ejemplo.",
+  "sign.heading": "Revisar y firmar",
+  "sign.help": "Aquí está su paquete completado. Revíselo. Puede agregar una firma en la pantalla, o dejar las líneas de firma en blanco y firmar el formulario impreso a mano. No se envía nada a ningún lugar.",
+  "sign.toolbar": "Controles de vista del documento",
+  "sign.zoomOut": "Alejar",
+  "sign.zoomIn": "Acercar",
+  "sign.fitWidth": "Ajustar al ancho",
+  "sign.addSignature": "Agregar una firma",
+  "sign.previewLabel": "Vista previa de su paquete completado",
+  "sign.pageLabel": "Página {n}",
+  "sign.placePrompt": "Su firma está lista. Elija la página donde va y colóquela. Puede arrastrarla al lugar correcto.",
+  "sign.placePage": "Página",
+  "sign.discard": "Descartar",
+  "sign.placeButton": "Colocar en la página",
+  "sign.removeSignature": "Quitar esta firma",
+  "sign.back": "Volver a la revisión",
+  "sign.download": "Descargar el paquete firmado",
+  "sign.saving": "Preparando…",
+  "sign.error": "Algo salió mal al preparar el documento. Puede volver e intentarlo de nuevo.",
+  "sign.dialogTitle": "Agregar una firma",
+  "sign.tabDraw": "Dibujar",
+  "sign.tabType": "Escribir",
+  "sign.drawLabel": "Área para dibujar la firma",
+  "sign.drawHelp": "Firme arriba con el mouse, el dedo o un lápiz.",
+  "sign.typeLabel": "Escriba su nombre",
+  "sign.empty": "Primero dibuje o escriba su firma.",
+  "sign.clear": "Borrar",
+  "sign.cancel": "Cancelar",
+  "sign.addToForm": "Agregar"
 }

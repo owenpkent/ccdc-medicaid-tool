@@ -25,6 +25,7 @@ import { todayIso } from "../lib/fill/util";
 import { downloadPdfBytes } from "../lib/download";
 import { saveArchive, loadArchive, clearArchive, type ArchiveData } from "../lib/archive";
 import { EXAMPLE_PERSON_PROFILE, EXAMPLE_PERSON_EMPLOYER } from "../fixtures/examplePerson";
+import { PdfReview } from "./PdfReview";
 
 /**
  * The review-and-generate flow (form-fill-engine.md step 9), early preview.
@@ -41,13 +42,14 @@ const PACKET_SECTIONS = PROFILE_SECTIONS.filter((s) => s.id !== "w4");
 
 const FORM_FILE = "CO-CDASS-Attendant-Packet-2026.pdf";
 
-type FillPhase = "edit" | "review" | "done";
+type FillPhase = "edit" | "review" | "sign" | "done";
 
 export function FormFill() {
   const intl = useIntl();
   const [profile, setProfile] = useState<Profile>(() => blankProfile());
   const [employer, setEmployer] = useState<Employer>(() => blankEmployer());
   const [phase, setPhase] = useState<FillPhase>("edit");
+  const [filledBytes, setFilledBytes] = useState<Uint8Array | null>(null);
   const [signatureDate, setSignatureDate] = useState<string>(() => todayIso());
   const [newService, setNewService] = useState(true);
   const [firstDay, setFirstDay] = useState("");
@@ -228,8 +230,10 @@ export function FormFill() {
         ...(firstDay ? { firstDay } : {}),
       };
       const bytes = await fillPacket2026(template, profile, employer, opts);
-      downloadPdfBytes(bytes, "cdass-attendant-packet-filled.pdf");
-      setPhase("done");
+      // Instead of a blind download, show the filled packet for review and an
+      // optional on-screen signature before the download.
+      setFilledBytes(bytes);
+      setPhase("sign");
     } catch {
       setGenError(true);
     } finally {
@@ -461,6 +465,25 @@ export function FormFill() {
               {intl.formatMessage({ id: busy ? "fill.generating" : "fill.generate" })}
             </Button>
           </div>
+        </>
+      )}
+
+      {phase === "sign" && filledBytes && (
+        <>
+          <h2 tabIndex={-1} ref={headingRef}>
+            <FormattedMessage id="sign.heading" />
+          </h2>
+          <p className="fill-note">
+            <FormattedMessage id="sign.help" />
+          </p>
+          <PdfReview
+            bytes={filledBytes}
+            onBack={() => setPhase("review")}
+            onConfirm={(finalBytes) => {
+              downloadPdfBytes(finalBytes, "cdass-attendant-packet-filled.pdf");
+              setPhase("done");
+            }}
+          />
         </>
       )}
 

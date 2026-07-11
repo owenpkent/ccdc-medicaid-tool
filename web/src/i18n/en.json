@@ -5,11 +5,9 @@
   "lang.label": "Language",
   "lang.en": "English",
   "lang.es": "Español",
-
   "hero.title": "Got a letter from Health First Colorado?",
   "hero.body": "Drop it in below. We will tell you what it says, what to do, and when. Your letter never leaves this device.",
   "hero.privacy": "No accounts. No tracking. No server. Everything happens in your browser.",
-
   "drop.prompt": "Drop your letter here",
   "drop.or": "or",
   "drop.cta": "Choose a file",
@@ -17,12 +15,10 @@
   "drop.aria": "Drop a PDF or photo of your letter here, or press Enter to choose a file.",
   "drop.reading": "Reading {name}…",
   "drop.recognizing": "Reading the photo…",
-
   "paste.toggle": "Or paste the text instead",
   "paste.label": "Paste the words from your letter",
   "paste.placeholder": "Type or paste what the letter says…",
   "paste.button": "Check this text",
-
   "result.heading": "Here is what we found",
   "result.typeHeading": "What this letter is",
   "result.meaningHeading": "What it means",
@@ -34,7 +30,6 @@
   "result.download": "Download a one-page summary",
   "result.another": "Check another letter",
   "result.disclaimer": "This tool gives information, not legal advice. It does not file anything for you. For help, call CCDC.",
-
   "deadline.heading": "Deadline",
   "deadline.daysLeft": "{days, plural, one {# day left} other {# days left}}",
   "deadline.today": "Due today",
@@ -43,11 +38,9 @@
   "deadline.typicalWindow": "Letters like this usually give about {days} days. Look for the date printed on your letter.",
   "deadline.noWindow": "Look for the date printed on your letter. If you are not sure, call CCDC.",
   "deadline.estimateNote": "We read this date from your letter. Always confirm it against the letter itself.",
-
   "urgency.now": "Do this now",
   "urgency.this-week": "This week",
   "urgency.this-month": "This month",
-
   "status.working": "Working…",
   "error.heading": "We could not read that",
   "error.encrypted": "This PDF is locked with a password. Open it, remove the password, and save a new copy. Then try again.",
@@ -58,29 +51,23 @@
   "error.heic": "iPhone photos saved as HEIC cannot be read here. On your iPhone, open Settings, then Camera, then Formats, and choose \"Most Compatible.\" Take the photo again and try once more. Or upload the letter as a PDF.",
   "error.generic": "Something went wrong reading your letter. Please try again, or paste the text instead.",
   "error.tryAgain": "Try another letter",
-
   "how.title": "How it works",
   "how.step1": "Drop in a PDF or photo of your letter.",
   "how.step2": "We read it on your device. Nothing is uploaded.",
   "how.step3": "You see a plain-language summary, the deadline, and what to do next.",
-
   "footer.builtWith": "Built with the Colorado Cross-Disability Coalition. Open source.",
   "footer.help": "Need help right now? Call CCDC at {phone}.",
   "footer.privacyLink": "Privacy Notice",
   "footer.termsLink": "Terms of Use",
   "footer.sourceLink": "Source code",
-
   "theme.label": "Colors",
   "theme.light": "Light",
   "theme.dark": "Dark",
-
   "legal.back": "Back to the tool",
   "legal.updated": "Last updated: {date}",
   "legal.draftNote": "Draft for the demonstration period. Not yet reviewed by a lawyer.",
   "consent.legalLinks": "By continuing, you also agree to the {terms} and the {privacy}.",
-
   "app.demoBadge": "Demo",
-
   "consent.title": "Before you start",
   "consent.demoNotice": "This is a demonstration. It is an early version, shown for feedback. It is not yet a public service.",
   "consent.intro": "Please read this, then agree at the bottom.",
@@ -91,18 +78,15 @@
   "consent.noWarranty": "No warranty. This free tool is provided as is. By continuing, you agree that the people and organizations who made it are not responsible for decisions you make based on it, or for any loss connected to using it.",
   "consent.help": "Questions, or need help right now? Call CCDC at {phone}.",
   "consent.agree": "I understand and agree",
-
   "examples.heading": "Just looking? Try an example",
   "examples.note": "These sample letters are made up for demonstration. They are not about any real person.",
   "examples.termination": "Coverage ending: missing paperwork",
   "examples.renewal": "Renewal packet (a letter in Spanish)",
   "examples.workreq": "New work-reporting notice",
   "examples.denial": "Exemption denied",
-
   "fillTeaser.title": "Try the form filler (early preview)",
   "fillTeaser.body": "We are building the other half of Coverage Compass: filling official forms from information you enter once. The first form is the CDASS/PPL attendant enrollment packet. Everything stays on your device.",
   "fillTeaser.link": "Fill the CDASS attendant packet",
-
   "fill.title": "Fill a form (early preview)",
   "fill.previewNote": "Early preview. This form filler has not been reviewed by CCDC yet, and this page is in English only for now. Your answers stay on this device. Signature lines are left for you to sign by hand. Nothing is submitted anywhere.",
   "fill.formName": "Form: CDASS/PPL Attendant Enrollment Packet (2026)",
@@ -156,5 +140,33 @@
   "fill.demoLoadPerson": "Load the example person",
   "fill.demoScanId": "Scan the example ID",
   "fill.demoLoadedNotice": "Loaded the fictional example person. Every value is made up; check the form below.",
-  "fill.demoScanError": "Could not load the example ID image."
+  "fill.demoScanError": "Could not load the example ID image.",
+  "sign.heading": "Review and sign",
+  "sign.help": "Here is your filled packet. Check it over. You can add a signature on screen, or leave the signature lines blank and sign the printed form by hand. Nothing is submitted anywhere.",
+  "sign.toolbar": "Document view controls",
+  "sign.zoomOut": "Zoom out",
+  "sign.zoomIn": "Zoom in",
+  "sign.fitWidth": "Fit width",
+  "sign.addSignature": "Add a signature",
+  "sign.previewLabel": "Preview of your filled packet",
+  "sign.pageLabel": "Page {n}",
+  "sign.placePrompt": "Your signature is ready. Choose the page it goes on, then place it. You can drag it to the right spot.",
+  "sign.placePage": "Page",
+  "sign.discard": "Discard",
+  "sign.placeButton": "Place on page",
+  "sign.removeSignature": "Remove this signature",
+  "sign.back": "Back to review",
+  "sign.download": "Download the signed packet",
+  "sign.saving": "Preparing…",
+  "sign.error": "Something went wrong preparing the document. You can go back and try again.",
+  "sign.dialogTitle": "Add a signature",
+  "sign.tabDraw": "Draw",
+  "sign.tabType": "Type",
+  "sign.drawLabel": "Signature drawing area",
+  "sign.drawHelp": "Sign above with your mouse, finger, or a pen.",
+  "sign.typeLabel": "Type your name",
+  "sign.empty": "Draw or type your signature first.",
+  "sign.clear": "Clear",
+  "sign.cancel": "Cancel",
+  "sign.addToForm": "Add"
 }

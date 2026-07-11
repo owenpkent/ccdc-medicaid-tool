@@ -30,7 +30,12 @@ export class InvalidPdfError extends Error {
 
 let workerConfigured = false;
 
-async function loadPdfjs() {
+/**
+ * Load pdf.js lazily and configure its worker from our own origin exactly once.
+ * Exported so the on-screen viewer (lib/viewer.ts) reuses the same worker setup
+ * rather than configuring a second one.
+ */
+export async function loadPdfjs() {
   const pdfjs = await import("pdfjs-dist");
   if (!workerConfigured) {
     pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;

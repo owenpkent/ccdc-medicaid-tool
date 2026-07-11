@@ -749,3 +749,158 @@ p {
   color: var(--color-muted);
   font-size: 0.95rem;
 }
+
+/* ---------------------------------------------------------------------------
+ * Review-and-sign PDF viewer (components/PdfReview, components/SignatureDialog).
+ * The app's first on-screen PDF. Storage-free; styled with the app's tokens.
+ * ------------------------------------------------------------------------- */
+.pdf-review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.pdf-review-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.pdf-review-zoom {
+  min-width: 3.5rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.pdf-review-place {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+.pdf-review-scroll {
+  max-height: 70vh;
+  overflow: auto;
+  padding: var(--space-3);
+  background: var(--color-calm-bg, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pdf-review-page {
+  position: relative;
+  flex: 0 0 auto;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+.pdf-review-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.pdf-review-sig {
+  position: absolute;
+  border: 1px dashed var(--color-accent);
+}
+.pdf-review-sig-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: move;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.pdf-review-sig-remove {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.pdf-review-actions {
+  justify-content: flex-end;
+}
+
+/* Signature dialog (react-aria-components Modal). */
+.sig-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.5);
+}
+.sig-modal {
+  width: min(30rem, 100%);
+}
+.sig-dialog {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.sig-title {
+  margin: 0;
+}
+.sig-tabs {
+  display: flex;
+  gap: var(--space-2);
+}
+.sig-tab {
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  cursor: pointer;
+}
+.sig-tab.is-active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.sig-pad {
+  width: 100%;
+  height: 10rem;
+  background: #ffffff;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  touch-action: none;
+  cursor: crosshair;
+}
+.sig-type {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.sig-type-input {
+  min-height: 44px;
+}
+.sig-type-preview {
+  display: block;
+  min-height: 4rem;
+  padding: var(--space-2);
+  font-size: 2rem;
+  color: var(--color-fg);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
