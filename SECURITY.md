@@ -45,6 +45,23 @@ for this project:
   a critical flow (we treat this as a privacy issue too: it forces the user
   to disclose to a sighted helper).
 
+## Automated security checks
+
+Every push and pull request to `main` is scanned automatically:
+
+- **CodeQL** (`.github/workflows/codeql.yml`) runs GitHub's static analysis for
+  JavaScript/TypeScript (`security-and-quality` suite) on push, PR, and weekly.
+  Findings appear in the repository's Security tab.
+- **Dependabot** (`.github/dependabot.yml`) opens weekly PRs for vulnerable or
+  outdated npm and GitHub Actions dependencies. GitHub's Dependabot alerts flag
+  known advisories in the dependency tree.
+- **CI** (`.github/workflows/ci.yml`) runs the privacy-guard test on every
+  change, so a regression that touches storage outside the one audited module
+  fails the build (see [`docs/privacy.md`](docs/privacy.md)).
+
+These are a backstop, not a substitute for the responsible-disclosure process
+above. If you find something the automated tools missed, please report it.
+
 ## Coordinated disclosure
 
 For confirmed vulnerabilities we will:

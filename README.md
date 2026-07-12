@@ -1,5 +1,6 @@
 # Coverage Compass *(working title)*
 
+[![CI](https://github.com/owenpkent/coverage-compass/actions/workflows/ci.yml/badge.svg)](https://github.com/owenpkent/coverage-compass/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/owenpkent/coverage-compass?color=blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![good first issues](https://img.shields.io/github/issues/owenpkent/coverage-compass/good%20first%20issue?color=7057ff&label=good%20first%20issues)](https://github.com/owenpkent/coverage-compass/contribute)

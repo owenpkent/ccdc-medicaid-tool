@@ -84,6 +84,17 @@ npm run test
 npm run lint
 ```
 
+These are the same checks CI runs, so passing them locally means a green PR.
+
+### Continuous integration
+
+Every push and pull request to `main` runs two GitHub Actions workflows:
+
+- **CI** (`.github/workflows/ci.yml`): lint, the full Vitest suite, and a production build on Node 20.
+- **CodeQL** (`.github/workflows/codeql.yml`): GitHub's static security analysis for JavaScript/TypeScript, with results in the repository's Security tab.
+
+Dependency updates arrive as weekly Dependabot PRs (`.github/dependabot.yml`); the `web/` dev/build toolchain is grouped into a single PR. Treat a Dependabot PR like any other: it must pass CI before merge.
+
 ### Where things live
 
 See [`web/README.md`](web/README.md) for the source layout, the stack, and the deliberate "non-obvious choices" (plain CSS, no router yet, strict TypeScript). Read it before adding a dependency or a new pattern.

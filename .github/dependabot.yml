@@ -1,0 +1,26 @@
+version: 2
+updates:
+  # Web app (Vite/React PWA) dependencies
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      # Batch the dev/build toolchain (vite, vitest, esbuild, eslint, types)
+      # so the periodic major-version bumps land as one reviewable PR.
+      dev-tooling:
+        dependency-type: development
+
+  # Root tooling dependencies
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # GitHub Actions workflow dependencies
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
