@@ -52,7 +52,7 @@ The app lives in [`web/`](web/). Run every command below from that directory unl
 
 ### Node version
 
-Use **Node 20**. The version is pinned in [`web/.nvmrc`](web/.nvmrc) and required in `web/package.json` (`"node": ">=20.0.0"`). If you use `nvm`:
+Use **Node 22**. The version is pinned in [`web/.nvmrc`](web/.nvmrc) and required in `web/package.json` (`"node": ">=22.0.0"`). `web/.npmrc` sets `engine-strict=true`, so an older Node fails at `npm install` with a clear message instead of breaking something subtle later. If you use `nvm`:
 
 ```bash
 cd web
@@ -90,7 +90,7 @@ These are the same checks CI runs, so passing them locally means a green PR.
 
 Every push and pull request to `main` runs two GitHub Actions workflows:
 
-- **CI** (`.github/workflows/ci.yml`): lint, the full Vitest suite, and a production build on Node 20.
+- **CI** (`.github/workflows/ci.yml`): lint, the full Vitest suite, and a production build on Node 22.
 - **CodeQL** (`.github/workflows/codeql.yml`): GitHub's static security analysis for JavaScript/TypeScript, with results in the repository's Security tab.
 
 Dependency updates arrive as weekly Dependabot PRs (`.github/dependabot.yml`). Minor and patch updates to the `web/` dev/build toolchain are grouped into a single PR, and React ships with `react-dom` and both type packages in one PR so their peer ranges stay consistent. Major updates come one package at a time, because batching them produced PRs that could not install (one package's new major violating another's peer range). Treat a Dependabot PR like any other: it must pass CI before merge.
