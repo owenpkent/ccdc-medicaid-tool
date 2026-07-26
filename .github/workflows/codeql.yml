@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           # Balanced default query suite; swap to security-extended for more
@@ -39,6 +39,6 @@ jobs:
 
       # Static analysis of source only; no build step needed for JS/TS.
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:javascript-typescript"
