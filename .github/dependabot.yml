@@ -7,10 +7,29 @@ updates:
       interval: weekly
     open-pull-requests-limit: 10
     groups:
-      # Batch the dev/build toolchain (vite, vitest, esbuild, eslint, types)
-      # so the periodic major-version bumps land as one reviewable PR.
+      # React and its type packages must move together: bumping react without
+      # react-dom (or @types/react without @types/react-dom) produces a peer
+      # conflict that npm ci refuses to install. Listed first so these packages
+      # land here rather than in dev-tooling.
+      react:
+        patterns:
+          - react
+          - react-dom
+          - '@types/react'
+          - '@types/react-dom'
+      # Batch the dev/build toolchain (vite, vitest, eslint, prettier, types)
+      # so routine updates land as one reviewable PR. Majors are deliberately
+      # excluded: grouping them produced unmergeable PRs where one package's
+      # new major violated another's peer range (e.g. typescript 7 against
+      # @typescript-eslint's <6.1.0 cap). Each major now gets its own PR.
       dev-tooling:
         dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - '@types/react'
+          - '@types/react-dom'
 
   # Root tooling dependencies
   - package-ecosystem: npm
