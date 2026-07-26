@@ -46,7 +46,13 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
   const [placePage, setPlacePage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  // Record which packet failed rather than a bare boolean, and derive the
+  // banner from it. A new `bytes` prop then hides a stale error on the render
+  // it arrives, the same instant an eager reset inside the load effect would
+  // have, but without an effect that updates state synchronously
+  // (react-hooks/set-state-in-effect).
+  const [errorBytes, setErrorBytes] = useState<Uint8Array | null>(null);
+  const error = errorBytes === bytes;
 
   const fitWidth = useCallback(() => {
     const c = containerRef.current;
@@ -59,7 +65,6 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
   useEffect(() => {
     let alive = true;
     let task: PDFDocumentLoadingTask | null = null;
-    setError(false);
     openPdf(bytes)
       .then(async (t) => {
         task = t;
@@ -72,7 +77,7 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
         fitWidth();
       })
       .catch(() => {
-        if (alive) setError(true);
+        if (alive) setErrorBytes(bytes);
       });
     return () => {
       alive = false;
@@ -108,7 +113,7 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
 
   const confirm = async () => {
     setBusy(true);
-    setError(false);
+    setErrorBytes(null);
     try {
       const placed: PlacedSignature[] = signatures.map((s) => ({
         page: s.page,
@@ -121,7 +126,7 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
       const final = await stampSignatures(bytes, placed);
       onConfirm(final);
     } catch {
-      setError(true);
+      setErrorBytes(bytes);
       setBusy(false);
     }
   };
