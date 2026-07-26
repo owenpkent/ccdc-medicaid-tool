@@ -23,7 +23,7 @@
     "pdfjs-dist": "^6.0.227",
     "react": "^18.3.1",
     "react-aria-components": "^1.4.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.8",
     "react-intl": "^6.8.9",
     "tesseract.js": "^7.0.0",
     "zxing-wasm": "^2.2.4"
@@ -37,7 +37,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.1.0",
     "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",
     "@vitejs/plugin-react": "^4.3.3",
