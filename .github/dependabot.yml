@@ -6,6 +6,21 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    ignore:
+      # TypeScript 7 cannot install: @typescript-eslint (8.65.0, the current
+      # latest) declares peer typescript ">=4.8.4 <6.1.0". Remove this entry
+      # when typescript-eslint ships a release whose peer range includes 7.x.
+      # Tracked in issue #39.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+      # ESLint 10 has no accessible lint story yet: eslint-plugin-jsx-a11y's
+      # latest release (6.10.2) peers eslint "^3 || ... || ^9", and the a11y
+      # gate is non-negotiable. Remove when jsx-a11y supports eslint 10, and
+      # bump the two together. Tracked in issue #40.
+      - dependency-name: eslint
+        update-types:
+          - version-update:semver-major
     groups:
       # React and its type packages must move together: bumping react without
       # react-dom (or @types/react without @types/react-dom) produces a peer
