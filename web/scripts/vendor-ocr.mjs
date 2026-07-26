@@ -9,29 +9,51 @@
 // lockfile, so a fresh clone runs `npm install` then this script (wired into the
 // predev/prebuild npm hooks) and gets identical assets.
 //
+// The destination directories carry the installed package versions (see
+// scripts/vendor-assets.mjs). Upgrading a package therefore moves the bytes to a
+// URL the service worker has never cached, which is what stops a returning user
+// from pairing new JavaScript glue with a 90-day-old cached wasm binary.
+//
 // Run: node scripts/vendor-ocr.mjs
-import { existsSync, mkdirSync, copyFileSync, rmSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync } from "node:fs";
+import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { vendorPaths } from "./vendor-assets.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const web = resolve(here, "..");
 const nm = resolve(web, "node_modules");
-const out = resolve(web, "public", "vendor", "tesseract");
+const paths = vendorPaths();
+const out = resolve(web, "public", paths.tesseract);
 const tessdataOut = resolve(out, "tessdata");
-const zxingOut = resolve(web, "public", "vendor", "zxing");
+const zxingOut = resolve(web, "public", paths.zxing);
 
 const force = process.argv.includes("--force");
 
-// Cheap skip: if the assets are already in place, don't recopy ~27 MB on every
-// `npm run dev`. Pass --force to refresh after upgrading the OCR packages.
+// Drop every version directory except the current one (and any pre-versioning
+// files left at the old flat locations). Without this, each upgrade would leave
+// another ~27 MB in public/vendor and ship it all in dist/.
+function pruneOldVersions(dir, keep) {
+  if (!existsSync(dir)) return;
+  for (const entry of readdirSync(dir)) {
+    if (entry === keep) continue;
+    rmSync(resolve(dir, entry), { recursive: true, force: true });
+    console.log(`Removed stale vendored assets: ${resolve(dir, entry)}`);
+  }
+}
+pruneOldVersions(dirname(out), basename(out));
+pruneOldVersions(dirname(zxingOut), basename(zxingOut));
+
+// Cheap skip: if this version's assets are already in place, don't recopy ~27 MB
+// on every `npm run dev`. The check is version-aware, so upgrading a package
+// refreshes the copy on its own; --force is only for a corrupted copy.
 const sentinels = [
   resolve(out, "worker.min.js"),
   resolve(tessdataOut, "eng.traineddata.gz"),
   resolve(zxingOut, "zxing_reader.wasm"),
 ];
 if (!force && sentinels.every((f) => existsSync(f))) {
-  console.log("tesseract assets already vendored (pass --force to refresh)");
+  console.log(`tesseract assets already vendored at ${out} (pass --force to refresh)`);
   process.exit(0);
 }
 

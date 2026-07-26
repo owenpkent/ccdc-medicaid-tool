@@ -8,8 +8,10 @@
  * served from our own origin out of /vendor/tesseract, vendored there by
  * scripts/vendor-ocr.mjs. Nothing is fetched from a CDN. That is what keeps the
  * "no third-party network" promise true for the photo path. See docs/privacy.md.
+ * The exact (version-bearing) URL comes from lib/vendor-assets.ts.
  */
 import type { Locale } from "./rules";
+import { TESSERACT_VENDOR as VENDOR } from "./vendor-assets";
 
 export interface OcrProgress {
   /** tesseract status string, e.g. "recognizing text". */
@@ -24,9 +26,6 @@ export interface OcrOptions {
   /** Abort signal: terminates the worker if the user cancels. */
   signal?: AbortSignal;
 }
-
-// Base-aware so the app works under a subpath (e.g. GitHub Pages project sites).
-const VENDOR = `${import.meta.env.BASE_URL}vendor/tesseract`;
 
 /** Thrown when an in-flight OCR run is cancelled via the abort signal. */
 export class OcrAbortError extends Error {

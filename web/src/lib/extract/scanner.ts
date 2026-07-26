@@ -4,7 +4,8 @@
  * All decoding happens in this browser via WASM served from this app's own
  * origin: zxing-wasm (PDF417 license barcodes) from /vendor/zxing and
  * tesseract.js (OCR) from /vendor/tesseract, both vendored by
- * scripts/vendor-ocr.mjs. No image ever leaves the machine.
+ * scripts/vendor-ocr.mjs and addressed through lib/vendor-assets.ts (which pins
+ * the URLs to the installed package versions). No image ever leaves the machine.
  *
  * Both engines are dynamically imported so the fill view's first paint pays
  * nothing for them; they load when a document is actually scanned.
@@ -13,14 +14,13 @@ import { parseAamva, type IdFields } from "./aamva";
 import { parseMrz } from "./mrz";
 import { parseSsnCard } from "./ssncard";
 import { parseLicenseFront } from "./dlfront";
+import { TESSERACT_VENDOR, ZXING_WASM_URL } from "../vendor-assets";
 
 export interface ScanResult {
   fields: IdFields;
   /** Human-readable provenance, e.g. "Driver's license barcode". */
   source: string;
 }
-
-const VENDOR = `${import.meta.env.BASE_URL}vendor`;
 
 type ZxingReader = typeof import("zxing-wasm/reader");
 let zxingPromise: Promise<ZxingReader> | null = null;
@@ -29,7 +29,7 @@ function getZxing(): Promise<ZxingReader> {
     z.prepareZXingModule({
       overrides: {
         locateFile: (path: string, prefix: string) =>
-          path.endsWith(".wasm") ? `${VENDOR}/zxing/zxing_reader.wasm` : prefix + path,
+          path.endsWith(".wasm") ? ZXING_WASM_URL : prefix + path,
       },
     });
     return z;
@@ -47,9 +47,9 @@ let workerPromise: Promise<TesseractWorker> | null = null;
 function getOcrWorker(): Promise<TesseractWorker> {
   workerPromise ??= import("tesseract.js").then(({ createWorker }) =>
     createWorker("eng", 1, {
-      workerPath: `${VENDOR}/tesseract/worker.min.js`,
-      corePath: `${VENDOR}/tesseract/`,
-      langPath: `${VENDOR}/tesseract/tessdata`,
+      workerPath: `${TESSERACT_VENDOR}/worker.min.js`,
+      corePath: `${TESSERACT_VENDOR}/`,
+      langPath: `${TESSERACT_VENDOR}/tessdata`,
       cacheMethod: "none",
     }),
   );

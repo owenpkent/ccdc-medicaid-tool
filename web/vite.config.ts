@@ -1,6 +1,13 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { vendorPaths } from "./scripts/vendor-assets.mjs";
+
+// Where scripts/vendor-ocr.mjs put the OCR and barcode assets for the versions
+// installed right now. Injected below so the app requests exactly those bytes.
+// Read at config load, so `vite build`, `vite dev`, and vitest (same config) all
+// agree with node_modules and cannot drift from it.
+const vendor = vendorPaths();
 
 // Content-Security-Policy that enforces the privacy promise: no script, fetch,
 // frame, or connection may reach any origin other than our own. `connect-src
@@ -64,6 +71,13 @@ export default defineConfig({
   // Relative base so the app works whether served from a domain root or a
   // project subpath (e.g. GitHub Pages /coverage-compass/).
   base: "./",
+  // Build-time constants, not hand-maintained ones: src/lib/vendor-assets.ts
+  // turns these into the URLs the app fetches. See scripts/vendor-assets.mjs for
+  // why the paths carry versions (stale CacheFirst wasm crashes the scanner).
+  define: {
+    __VENDOR_TESSERACT_PATH__: JSON.stringify(vendor.tesseract),
+    __VENDOR_ZXING_PATH__: JSON.stringify(vendor.zxing),
+  },
   plugins: [
     react(),
     injectCsp(),
@@ -101,11 +115,22 @@ export default defineConfig({
         runtimeCaching: [
           {
             // All vendored decode assets: tesseract (OCR) and zxing (barcodes).
+            // CacheFirst on purpose: offline scanning is a product requirement,
+            // and revalidating 27 MB on every scan is not an option. Serving
+            // stale bytes is prevented by the URL, not by the handler. The paths
+            // carry the installed package versions (scripts/vendor-assets.mjs),
+            // so an upgraded build asks for a URL this cache has never seen.
             urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.includes("/vendor/"),
             handler: "CacheFirst",
             options: {
               cacheName: "ocr-assets",
-              expiration: { maxEntries: 24, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              // One version's full set is 13 files (worker, 3 core variants x 3
+              // files, 2 language models, the zxing wasm), and a single app
+              // build only ever requests one version. The small headroom lets
+              // the new set land during an upgrade; the previous version's
+              // entries are then the least recently used, so they are evicted
+              // instead of accumulating another ~27 MB.
+              expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },
