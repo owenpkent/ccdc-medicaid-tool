@@ -13,16 +13,18 @@ Then open http://localhost:5173.
 
 `npm install` followed by `npm run dev` (or `npm run build`) is all you need: the
 `predev` / `prebuild` hooks generate the typed rule module from the YAML
-(`gen:rules`) and vendor the OCR and barcode runtime assets (tesseract.js and
-zxing-wasm) from `node_modules` into `public/vendor` (`vendor:ocr`). The
-vendored assets (~27 MB) are gitignored and reproducible from the lockfile.
+(`gen:rules`) and vendor the runtime assets our libraries fetch at run time
+(tesseract.js, zxing-wasm, and pdf.js's standard PDF fonts) from `node_modules`
+into `public/vendor` (`vendor:ocr`). The vendored assets (~40 MB) are gitignored
+and reproducible from the lockfile.
 
 They land in a directory named for the installed package versions (for example
 `public/vendor/zxing/2.2.4-3ea97620`), and `vite.config.ts` injects that same
-path into the app. Upgrading tesseract.js or zxing-wasm therefore changes the URL
-the app requests, so the service worker's 90-day CacheFirst cache of `/vendor/`
-cannot pair new JavaScript glue with an old cached wasm binary. `vendor:ocr`
-deletes the previous version's directory, so only one copy is ever on disk.
+path into the app. Upgrading tesseract.js, zxing-wasm, or pdfjs-dist therefore
+changes the URL the app requests, so the service worker's 90-day CacheFirst cache
+of `/vendor/` cannot pair new JavaScript glue with an old cached wasm binary.
+`vendor:ocr` deletes the previous version's directory, so only one copy is ever
+on disk.
 
 ## Build
 

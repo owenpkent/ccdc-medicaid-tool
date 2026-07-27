@@ -123,8 +123,9 @@ The layers, in order:
     relationship, an age threshold, a tax status: only checked when the stored
     data unambiguously supports it. Anything uncertain is left for the human.
 - **On-screen review and sign (early preview).** The filled packet is rendered
-  in the browser with pdf.js (reusing the read side's same-origin worker and
-  `isEvalSupported: false`) so the person can review it before saving. They can
+  in the browser with pdf.js (reusing the read side's same-origin worker,
+  `isEvalSupported: false`, and the vendored standard PDF fonts, so checkbox
+  glyphs render for real) so the person can review it before saving. They can
   optionally add a signature, drawn or typed, place it on a page, and it is
   stamped in with pdf-lib, still without flattening. Storage-free (in-memory
   state only). See `components/PdfReview.tsx`, `components/SignatureDialog.tsx`,
@@ -323,8 +324,9 @@ This is intentional. It keeps a CCDC attorney in the loop on rule changes.
 - `npm run build` produces a static bundle in `web/dist/`.
 - Reproducible builds: lockfile committed, Node version pinned via `.nvmrc`, deterministic build flags.
 - Subresource Integrity hashes generated automatically for all bundled assets.
-- OCR/WASM assets (tesseract worker/core and model, zxing WASM) are vendored with
-  the bundle, as in CDASS Enroll, so the page never fetches them at runtime.
+- OCR/WASM assets (tesseract worker/core and model, zxing WASM) and pdf.js's
+  standard PDF fonts are vendored with the bundle, as in CDASS Enroll, so the
+  page never fetches them from anyone else at runtime.
 - Deploy target is a static host (Netlify or GitHub Pages). No backend, no serverless functions.
 - Releases are tagged and signed.
 

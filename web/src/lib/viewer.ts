@@ -2,15 +2,16 @@
  *
  * Storage-free by design (the privacy guard forbids any browser storage API
  * here): everything is in-memory. Rendering reuses the same lazily-loaded,
- * same-origin pdf.js worker as the read side (lib/pdf.ts), with
- * `isEvalSupported: false` to satisfy the CSP. Signature stamping runs through
- * the fill layer's audited `overlaySignature`, and pdf-lib is imported
- * dynamically so it stays in its own lazy chunk.
+ * same-origin pdf.js worker and the same document options as the read side
+ * (lib/pdf.ts), so eval() stays off for the CSP and the standard fonts come
+ * from our own origin. Signature stamping runs through the fill layer's audited
+ * `overlaySignature`, and pdf-lib is imported dynamically so it stays in its own
+ * lazy chunk.
  */
 import type { PDFDocumentLoadingTask, PDFPageProxy } from "pdfjs-dist";
 
 import { overlaySignature } from "./fill/util";
-import { loadPdfjs } from "./pdf";
+import { loadPdfjs, PDFJS_DOCUMENT_OPTIONS } from "./pdf";
 
 /** A signature the user has placed on a page, in page-relative fractions. */
 export interface PlacedSignature {
@@ -28,13 +29,15 @@ export interface PlacedSignature {
 /**
  * Open a PDF for rendering. Copies the bytes so the caller's buffer is safe,
  * and returns the loading task (its `.promise` resolves to the document and its
- * `.destroy()` tears everything down). `isEvalSupported: false` is cast in
- * because v6 dropped it from the typed params but pdf.js still honors it; this
- * matches lib/pdf.ts and keeps eval() off, which our CSP requires.
+ * `.destroy()` tears everything down). The shared PDFJS_DOCUMENT_OPTIONS are
+ * cast in because v6 dropped them from the typed params but pdf.js still honors
+ * them: they keep eval() off (our CSP requires it) and point pdf.js at our
+ * vendored standard fonts, so checkbox glyphs render from the real ZapfDingbats
+ * instead of whatever substitute the machine happens to have.
  */
 export async function openPdf(bytes: Uint8Array): Promise<PDFDocumentLoadingTask> {
   const pdfjs = await loadPdfjs();
-  const params = { data: bytes.slice(), isEvalSupported: false } as Parameters<
+  const params = { data: bytes.slice(), ...PDFJS_DOCUMENT_OPTIONS } as Parameters<
     typeof pdfjs.getDocument
   >[0];
   return pdfjs.getDocument(params);

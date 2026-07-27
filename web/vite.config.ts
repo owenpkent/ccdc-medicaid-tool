@@ -3,8 +3,9 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { vendorPaths } from "./scripts/vendor-assets.mjs";
 
-// Where scripts/vendor-ocr.mjs put the OCR and barcode assets for the versions
-// installed right now. Injected below so the app requests exactly those bytes.
+// Where scripts/vendor-ocr.mjs put the OCR, barcode, and pdf.js font assets for
+// the versions installed right now. Injected below so the app requests exactly
+// those bytes.
 // Read at config load, so `vite build`, `vite dev`, and vitest (same config) all
 // agree with node_modules and cannot drift from it.
 const vendor = vendorPaths();
@@ -77,6 +78,7 @@ export default defineConfig({
   define: {
     __VENDOR_TESSERACT_PATH__: JSON.stringify(vendor.tesseract),
     __VENDOR_ZXING_PATH__: JSON.stringify(vendor.zxing),
+    __VENDOR_PDFJS_FONTS_PATH__: JSON.stringify(vendor.pdfjsFonts),
   },
   plugins: [
     react(),
@@ -106,17 +108,19 @@ export default defineConfig({
       workbox: {
         // Precache the app shell so PDF and paste-text triage work fully offline.
         globPatterns: ["**/*.{js,mjs,css,html,svg,png,webmanifest}"],
-        // The vendored OCR assets (~27 MB) are NOT precached: that would bloat
-        // first load on a slow connection. They are runtime-cached on first use
-        // below, so photo-OCR also works offline after the first photo.
+        // The vendored OCR, barcode, and pdf.js font assets (~40 MB) are NOT
+        // precached: that would bloat first load on a slow connection. They are
+        // runtime-cached on first use below, so photo-OCR and the on-screen
+        // preview also work offline after the first use.
         globIgnores: ["**/vendor/**"],
         // pdf.js's worker chunk can exceed the 2 MB default.
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         runtimeCaching: [
           {
-            // All vendored decode assets: tesseract (OCR) and zxing (barcodes).
+            // All vendored runtime assets: tesseract (OCR), zxing (barcodes),
+            // and the pdf.js standard fonts (on-screen preview).
             // CacheFirst on purpose: offline scanning is a product requirement,
-            // and revalidating 27 MB on every scan is not an option. Serving
+            // and revalidating 40 MB on every scan is not an option. Serving
             // stale bytes is prevented by the URL, not by the handler. The paths
             // carry the installed package versions (scripts/vendor-assets.mjs),
             // so an upgraded build asks for a URL this cache has never seen.
@@ -124,13 +128,24 @@ export default defineConfig({
             handler: "CacheFirst",
             options: {
               cacheName: "ocr-assets",
-              // One version's full set is 13 files (worker, 3 core variants x 3
-              // files, 2 language models, the zxing wasm), and a single app
-              // build only ever requests one version. The small headroom lets
-              // the new set land during an upgrade; the previous version's
-              // entries are then the least recently used, so they are evicted
-              // instead of accumulating another ~27 MB.
-              expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              // maxEntries must clear what ONE version can request, or the
+              // cache thrashes and offline decode breaks on every reload.
+              // Ceiling for one version, counting every file that can be
+              // requested (not every file vendored):
+              //   12 tesseract  1 worker + 3 core variants x 3 files
+              //                 (js, wasm, wasm.js) + 2 language models
+              //    1 zxing      zxing_reader.wasm
+              //   14 pdf.js     the standard font binaries (10 .pfb + 4 .ttf).
+              //                 The 2 LICENSE files ship for attribution and
+              //                 are never fetched. In practice pdf.js asks for
+              //                 only Symbol and ZapfDingbats, because it
+              //                 substitutes system fonts for the rest.
+              //   -- = 27
+              // 32 leaves 5 slots of headroom so the new set can land during an
+              // upgrade. The previous version's entries are then the least
+              // recently used, so they are evicted instead of accumulating
+              // another ~40 MB.
+              expiration: { maxEntries: 32, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

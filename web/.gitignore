@@ -4,7 +4,8 @@ dist/
 .vite/
 coverage/
 
-# Vendored OCR runtime assets (tesseract worker, WASM cores, language data).
-# ~27 MB of binaries, reproducibly copied from node_modules by
-# scripts/vendor-ocr.mjs (run automatically on predev/prebuild). Not committed.
+# Vendored runtime assets (tesseract worker, WASM cores, language data, the
+# zxing barcode reader, and pdf.js's standard PDF fonts). ~40 MB of binaries,
+# reproducibly copied from node_modules by scripts/vendor-ocr.mjs (run
+# automatically on predev/prebuild). Not committed.
 public/vendor/
