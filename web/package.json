@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "gen:rules": "node scripts/gen-rules.mjs",
+    "gen:example-barcode": "vite-node scripts/gen-example-barcode.ts",
     "vendor:ocr": "node scripts/vendor-ocr.mjs",
     "predev": "npm run gen:rules && npm run vendor:ocr",
     "dev": "vite",
