@@ -57,10 +57,23 @@ export const EXAMPLE_PERSON_EMPLOYER: Partial<Employer> = {
 /* The AAMVA payload encoded in the committed sample barcode image
  * (public/examples/example-license-barcode.png), which the "scan the example
  * ID" demo feeds through the real PDF417 decode path. Same fictional Jane Doe
- * as above; fixture text ported from the CDASS Enroll smoke test. */
+ * as above.
+ *
+ * This is the single source of truth for that image: `npm run gen:example-barcode`
+ * regenerates the PNG from it, and barcode.test.ts asserts the committed PNG
+ * still decodes to exactly this string, so the two cannot drift apart.
+ *
+ * The header must stay byte-exact, and the control characters are the reason.
+ * AAMVA D.12.3 fixes the first four characters of every compliant symbol as
+ * "@", LF, RS (0x1e), CR (0x0d), and those non-printables are what make zxing
+ * classify the payload as Binary rather than Text. Only Binary content gets
+ * escaped under zxing's default "HRI" text mode, which is precisely the bug
+ * AAMVA_READ_OPTIONS exists to avoid. A sample without them decodes as Text,
+ * hides that whole class of bug, and stops representing a real card. */
 export const EXAMPLE_LICENSE_AAMVA = [
-  "@",
-  "ANSI 636020090002DL00410278ZC03190008DLDAQ123456789",
+  // "@" LF RS CR "ANSI ": D.12.3 fixes the first four characters, and the
+  // non-printables are what make zxing classify the payload as Binary.
+  "@\n\x1e\rANSI 636020090002DL00410278ZC03190008DLDAQ123456789",
   "DCSDOE",
   "DACJANE",
   "DADMARIE",

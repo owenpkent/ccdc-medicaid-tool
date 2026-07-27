@@ -2,8 +2,12 @@
  * driver's license or state ID into profile fields.
  *
  * Ported from CDASS Enroll (src/extract/aamva.js). Pure text-to-fields; the
- * barcode decoding itself happens in scanner.ts.
+ * barcode decoding itself happens in scanner.ts. The payload format is the
+ * AAMVA DL/ID Card Design Standard, section D.12 ("Data encoding structures");
+ * docs/id-barcode.md is the full contract: the payload format, the traps this
+ * file exists to avoid, and how to diagnose a scan that will not read.
  */
+import type { ReaderOptions } from "zxing-wasm/reader";
 
 export interface IdFields {
   first?: string;
@@ -27,19 +31,78 @@ export interface IdFields {
   passportNumberUnverified?: string;
 }
 
-// Known AAMVA element IDs. Matching against this list (instead of any D??)
-// matters because the subfile marker "DL" can directly precede the first
-// element, e.g. "...DLDAQ12345" where the element is DAQ, not DLD.
+// Known AAMVA element IDs.
 const CODES =
   "DAA DAB DAC DAD DAE DAF DAG DAH DAI DAJ DAK DAL DAM DAN DAO DAP DAQ DAR DAS DAT DAU DAV DAW DAX DAY DAZ " +
   "DBA DBB DBC DBD DBE DBF DBG DBH DBI DBJ DBK DBL DBM DBN DBS DCA DCB DCD DCE DCF DCG DCI DCJ DCK DCL DCM " +
   "DCN DCO DCP DCQ DCR DCS DCT DCU DDA DDB DDC DDD DDE DDF DDG DDH DDI DDJ DDK DDL";
-const ELEMENT = new RegExp(`(${CODES.split(" ").join("|")})([^\\n\\r]*)`, "g");
+const CODE_SET = new Set(CODES.split(" "));
+
+/**
+ * zxing read options this parser requires, kept beside the parser that depends
+ * on them rather than at the call site, so a test can assert the contract
+ * without importing the browser-only scanner module.
+ *
+ * textMode is the load-bearing one. zxing defaults to "HRI" (human readable
+ * interpretation), which renders control characters as literal placeholders: a
+ * newline arrives as the four characters "<LF>". AAMVA separates its elements
+ * with real newlines (D.12.3: the Data Element Separator is LF), so under the
+ * default the whole payload collapses onto one line, every element after the
+ * first is swallowed into the first one's value, and this parser returns a
+ * single junk field from an otherwise perfect scan.
+ *
+ * The binarizer is deliberately absent; the scanner tries several.
+ */
+export const AAMVA_READ_OPTIONS: ReaderOptions = {
+  formats: ["PDF417"],
+  tryHarder: true,
+  tryRotate: true,
+  tryInvert: true,
+  maxNumberOfSymbols: 1,
+  textMode: "Plain",
+};
+
+// The subfile types this parser reads. Per AAMVA D.12.4, "DL" designates a
+// driver's license subfile and "ID" a non-DL (state ID card); jurisdictions add
+// their own as "Z" plus the first letter of the jurisdiction ("ZC" for
+// Colorado), which carry no element we need.
+const SUBFILE_ELEMENT = /(?:DL|ID)([A-Z]{3})/g;
+
+/**
+ * Where this line's element begins. Elements sit one per line (AAMVA separates
+ * them with LF), so normally 0. The exception is the first element, which
+ * trails the header's subfile designators, because "the data related to the
+ * first subfile designator follows the last Subfile Designator" and "each
+ * subfile must begin with the two-character Subfile Type" (D.12.4):
+ *
+ *   ...ANSI 636020100102 ID00410259 ZC03000010 | ID | DAQ | value
+ *                        designators           ^type ^first element
+ *
+ * Anchoring matters; scanning for element IDs at any offset does not work. On a
+ * state ID the subfile type "ID" runs straight into "DAQ" to spell "IDDAQ",
+ * whose middle three characters "DDA" are themselves a valid element ID. A free
+ * scan matches that phantom DDA one character early, and since a value runs to
+ * the end of its line, it swallows the ID number. Driver's licenses hide this:
+ * "DLDAQ" contains no valid element ID other than DAQ.
+ */
+function elementStart(line: string): number {
+  if (!line.includes("ANSI ")) return 0;
+  let at = -1;
+  for (const m of line.matchAll(SUBFILE_ELEMENT)) {
+    if (CODE_SET.has(m[1] as string)) at = (m.index as number) + 2;
+  }
+  return at; // -1 when the header carries no trailing element
+}
 
 export function parseAamva(raw: string): IdFields | null {
   if (!raw || !raw.includes("ANSI ")) return null;
   const el: Record<string, string> = {};
-  for (const m of raw.matchAll(ELEMENT)) el[m[1] as string] ??= (m[2] as string).trim();
+  for (const line of raw.split("\n")) {
+    const start = elementStart(line);
+    if (start < 0) continue;
+    const code = line.slice(start, start + 3);
+    if (CODE_SET.has(code)) el[code] ??= line.slice(start + 3).trim();
+  }
 
   // Some pre-2000 licenses pack the whole name into DAA (LAST,FIRST,MIDDLE).
   let first = el.DAC ?? el.DCT ?? "";
@@ -93,7 +156,9 @@ export function titleCase(s: string | undefined): string {
     .replace(/(^|[\s\-'])\w/g, (c) => c.toUpperCase());
 }
 
-export function clean(obj: Record<string, string | undefined>): IdFields | null {
+export function clean(
+  obj: Record<string, string | undefined>,
+): IdFields | null {
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(obj)) if (v) out[k] = v;
   return Object.keys(out).length ? (out as IdFields) : null;
