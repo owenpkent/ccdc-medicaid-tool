@@ -42,6 +42,7 @@ describe("LetterSummary", () => {
     const { container } = renderWithProviders(
       <LetterSummary classification={c} onReset={noop} />,
     );
-    expect(await axeViolations(container)).toEqual([]);
+    // 15 rules passed when measured; the floor proves axe looked (see test-utils).
+    expect(await axeViolations(container, 8)).toEqual([]);
   });
 });

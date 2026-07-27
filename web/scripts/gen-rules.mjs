@@ -11,7 +11,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import yaml from "js-yaml";
+// js-yaml 5 is ESM-only and has no default export; `load` is a named export.
+import { load } from "js-yaml";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const web = resolve(here, "..");
@@ -19,7 +20,7 @@ const repoRoot = resolve(web, "..");
 const src = resolve(repoRoot, "rules", "co", "letter-types.yaml");
 const out = resolve(web, "src", "lib", "rules.generated.ts");
 
-const doc = yaml.load(readFileSync(src, "utf8"));
+const doc = load(readFileSync(src, "utf8"));
 if (!doc || typeof doc !== "object" || !doc.types) {
   throw new Error(`Unexpected rules YAML shape in ${src}`);
 }
