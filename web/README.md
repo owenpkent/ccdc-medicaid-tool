@@ -17,6 +17,13 @@ Then open http://localhost:5173.
 zxing-wasm) from `node_modules` into `public/vendor` (`vendor:ocr`). The
 vendored assets (~27 MB) are gitignored and reproducible from the lockfile.
 
+They land in a directory named for the installed package versions (for example
+`public/vendor/zxing/2.2.4-3ea97620`), and `vite.config.ts` injects that same
+path into the app. Upgrading tesseract.js or zxing-wasm therefore changes the URL
+the app requests, so the service worker's 90-day CacheFirst cache of `/vendor/`
+cannot pair new JavaScript glue with an old cached wasm binary. `vendor:ocr`
+deletes the previous version's directory, so only one copy is ever on disk.
+
 ## Build
 
 ```bash
