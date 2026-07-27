@@ -68,6 +68,7 @@ describe("FormFill", () => {
 
   it("has no axe-detectable accessibility violations in the edit phase", async () => {
     const { container } = renderWithProviders(<FormFill />);
-    expect(await axeViolations(container)).toEqual([]);
+    // 17 rules passed when measured; the floor proves axe looked (see test-utils).
+    expect(await axeViolations(container, 8)).toEqual([]);
   });
 });
