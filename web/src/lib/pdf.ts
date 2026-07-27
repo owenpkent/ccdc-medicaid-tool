@@ -7,6 +7,27 @@
  */
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
+import { PDFJS_STANDARD_FONTS_URL } from "./vendor-assets";
+
+/**
+ * The options every pdf.js document in this app is opened with. One constant so
+ * the read side and the on-screen viewer cannot drift apart.
+ *
+ * - `isEvalSupported: false` keeps pdf.js off eval(), which our CSP forbids.
+ * - `standardFontDataUrl` points at our vendored copy of the standard PDF fonts
+ *   (scripts/vendor-ocr.mjs). Without it pdf.js warns "Ensure that the
+ *   `standardFontDataUrl` API parameter is provided" and then tries to borrow a
+ *   system font, which fails for ZapfDingbats (the glyph font PDF checkboxes
+ *   use) on machines that do not have it. Both paths translate fonts, so both
+ *   set it. Same-origin only: a CDN would break the privacy promise and the CSP.
+ *
+ * pdf.js v6's public types omit both fields, so callers attach this via a cast.
+ */
+export const PDFJS_DOCUMENT_OPTIONS = {
+  isEvalSupported: false,
+  standardFontDataUrl: PDFJS_STANDARD_FONTS_URL,
+} as const;
+
 export interface ExtractedText {
   text: string;
   pageCount: number;
@@ -54,8 +75,6 @@ function toUint8(input: File | Blob | ArrayBuffer | Uint8Array): Promise<Uint8Ar
  * Extract the text layer from a (digitally generated) PDF. Returns the combined
  * text and the page count. Scanned/image-only PDFs yield little or no text; the
  * caller should fall back to OCR when the result is effectively empty.
- *
- * `isEvalSupported: false` keeps pdf.js from using eval(), which our CSP forbids.
  */
 export async function extractTextFromPdf(
   input: File | Blob | ArrayBuffer | Uint8Array,
@@ -63,9 +82,9 @@ export async function extractTextFromPdf(
   const pdfjs = await loadPdfjs();
   const data = await toUint8(input);
 
-  // isEvalSupported:false hardens pdf.js against eval() (our CSP forbids eval
-  // regardless). The v6 public types omit the field, so attach it via a cast.
-  const params = { data, isEvalSupported: false } as Parameters<typeof pdfjs.getDocument>[0];
+  // See PDFJS_DOCUMENT_OPTIONS. The v6 public types omit these fields, so they
+  // are attached via a cast; pdf.js still honors them.
+  const params = { data, ...PDFJS_DOCUMENT_OPTIONS } as Parameters<typeof pdfjs.getDocument>[0];
   const task = pdfjs.getDocument(params);
   let doc: Awaited<typeof task.promise>;
   try {

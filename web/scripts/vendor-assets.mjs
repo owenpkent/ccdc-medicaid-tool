@@ -1,4 +1,4 @@
-// Where the vendored decode assets live, and the one place that decides it.
+// Where the vendored runtime assets live, and the one place that decides it.
 //
 // scripts/vendor-ocr.mjs copies the bytes to these paths; vite.config.ts injects
 // the same paths into the app bundle so the URLs the browser requests always
@@ -10,7 +10,9 @@
 // last 90 days keeps the OLD wasm binary after we upgrade the package, and the
 // new JavaScript glue then drives it into "RuntimeError: memory access out of
 // bounds". Moving the bytes to a new URL on every upgrade makes a stale hit
-// impossible: the new build asks for a URL that was never cached.
+// impossible: the new build asks for a URL that was never cached. The pdf.js
+// standard fonts ride the same rule: pdf.js and its font files are one unit, so
+// an upgraded pdf.js must never be handed 90-day-old font data.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -31,6 +33,10 @@ const TESSERACT_PACKAGES = [
   "@tesseract.js-data/spa",
 ];
 const ZXING_PACKAGES = ["zxing-wasm"];
+// pdf.js ships the 14 standard PDF fonts (Helvetica, Times, Courier, Symbol,
+// ZapfDingbats) as separate files it fetches at render time. They move with the
+// library, so the directory is keyed on pdfjs-dist alone.
+const PDFJS_PACKAGES = ["pdfjs-dist"];
 
 function installedVersion(pkg) {
   const file = resolve(nm, pkg, "package.json");
@@ -65,11 +71,12 @@ function tag(packages) {
  * onto import.meta.env.BASE_URL. Deriving both from this function is what keeps
  * "what we wrote" and "what we request" from drifting apart.
  *
- * @returns {{ tesseract: string, zxing: string }}
+ * @returns {{ tesseract: string, zxing: string, pdfjsFonts: string }}
  */
 export function vendorPaths() {
   return {
     tesseract: `vendor/tesseract/${tag(TESSERACT_PACKAGES)}`,
     zxing: `vendor/zxing/${tag(ZXING_PACKAGES)}`,
+    pdfjsFonts: `vendor/pdfjs-fonts/${tag(PDFJS_PACKAGES)}`,
   };
 }

@@ -1,9 +1,10 @@
-/* URLs for the decode assets we serve from our own origin.
+/* URLs for the runtime assets we serve from our own origin.
  *
  * tesseract.js (OCR) and zxing-wasm (barcode) need their worker, wasm, and
- * language files at runtime. scripts/vendor-ocr.mjs copies them out of
- * node_modules into web/public, so they are same-origin: nothing is fetched
- * from a CDN, ever (see docs/privacy.md).
+ * language files at runtime, and pdf.js fetches its standard PDF fonts while
+ * rendering. scripts/vendor-ocr.mjs copies them all out of node_modules into
+ * web/public, so they are same-origin: nothing is fetched from a CDN, ever
+ * (see docs/privacy.md).
  *
  * The directory names carry the installed package versions. vite.config.ts
  * injects them at build time from scripts/vendor-assets.mjs, the same helper the
@@ -26,3 +27,10 @@ export const TESSERACT_VENDOR = `${BASE}${__VENDOR_TESSERACT_PATH__}`;
 
 /** The zxing barcode reader wasm binary. */
 export const ZXING_WASM_URL = `${BASE}${__VENDOR_ZXING_PATH__}/zxing_reader.wasm`;
+
+/**
+ * Directory holding pdf.js's standard PDF fonts (Helvetica, Times, Courier,
+ * Symbol, ZapfDingbats). pdf.js appends a file name to this value, so the
+ * trailing slash is required: without it pdf.js throws "Invalid factory url".
+ */
+export const PDFJS_STANDARD_FONTS_URL = `${BASE}${__VENDOR_PDFJS_FONTS_PATH__}/`;

@@ -1,9 +1,11 @@
-// Vendor the OCR and barcode runtime assets (tesseract.js worker, WASM cores,
-// language data, and the zxing-wasm barcode reader) from node_modules into
+// Vendor the runtime assets our PDF, OCR, and barcode libraries fetch at run
+// time (tesseract.js worker, WASM cores, language data, the zxing-wasm barcode
+// reader, and pdf.js's standard PDF fonts) from node_modules into
 // web/public/vendor so the page never fetches them from a CDN at runtime. This
 // is what makes the "zero third-party network" privacy promise hold for the
-// photo-OCR and document-scan paths: every byte tesseract and zxing need is
-// served from our own origin (and cached for offline by the service worker).
+// photo-OCR, document-scan, and on-screen-preview paths: every byte tesseract,
+// zxing, and pdf.js need is served from our own origin (and cached for offline
+// by the service worker).
 //
 // The copied files are gitignored. They are reproducible from the pinned
 // lockfile, so a fresh clone runs `npm install` then this script (wired into the
@@ -15,7 +17,7 @@
 // from pairing new JavaScript glue with a 90-day-old cached wasm binary.
 //
 // Run: node scripts/vendor-ocr.mjs
-import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync, statSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { vendorPaths } from "./vendor-assets.mjs";
@@ -27,12 +29,13 @@ const paths = vendorPaths();
 const out = resolve(web, "public", paths.tesseract);
 const tessdataOut = resolve(out, "tessdata");
 const zxingOut = resolve(web, "public", paths.zxing);
+const fontsOut = resolve(web, "public", paths.pdfjsFonts);
 
 const force = process.argv.includes("--force");
 
 // Drop every version directory except the current one (and any pre-versioning
 // files left at the old flat locations). Without this, each upgrade would leave
-// another ~27 MB in public/vendor and ship it all in dist/.
+// another ~40 MB in public/vendor and ship it all in dist/.
 function pruneOldVersions(dir, keep) {
   if (!existsSync(dir)) return;
   for (const entry of readdirSync(dir)) {
@@ -43,14 +46,16 @@ function pruneOldVersions(dir, keep) {
 }
 pruneOldVersions(dirname(out), basename(out));
 pruneOldVersions(dirname(zxingOut), basename(zxingOut));
+pruneOldVersions(dirname(fontsOut), basename(fontsOut));
 
-// Cheap skip: if this version's assets are already in place, don't recopy ~27 MB
+// Cheap skip: if this version's assets are already in place, don't recopy ~40 MB
 // on every `npm run dev`. The check is version-aware, so upgrading a package
 // refreshes the copy on its own; --force is only for a corrupted copy.
 const sentinels = [
   resolve(out, "worker.min.js"),
   resolve(tessdataOut, "eng.traineddata.gz"),
   resolve(zxingOut, "zxing_reader.wasm"),
+  resolve(fontsOut, "FoxitDingbats.pfb"),
 ];
 if (!force && sentinels.every((f) => existsSync(f))) {
   console.log(`tesseract assets already vendored at ${out} (pass --force to refresh)`);
@@ -60,8 +65,10 @@ if (!force && sentinels.every((f) => existsSync(f))) {
 // Fresh each run so a removed/renamed upstream file never lingers.
 rmSync(out, { recursive: true, force: true });
 rmSync(zxingOut, { recursive: true, force: true });
+rmSync(fontsOut, { recursive: true, force: true });
 mkdirSync(tessdataOut, { recursive: true });
 mkdirSync(zxingOut, { recursive: true });
+mkdirSync(fontsOut, { recursive: true });
 
 function copy(from, to) {
   if (!existsSync(from)) {
@@ -105,4 +112,25 @@ copy(
   resolve(zxingOut, "zxing_reader.wasm"),
 );
 
-console.log(`Vendored tesseract assets into ${out} and zxing into ${zxingOut}`);
+// pdf.js standard PDF fonts (~800 KB). pdf.js fetches these at render time for
+// any font a PDF names but does not embed. Without them the on-screen
+// review-and-sign preview warns "Ensure that the `standardFontDataUrl` API
+// parameter is provided" and falls back to a system font, which on most
+// machines means the checkbox glyph font (ZapfDingbats) is missing entirely.
+// Copy the whole directory, licenses included: it is small, the exact set
+// pdf.js may ask for changes between releases, and the LICENSE files are the
+// attribution the Foxit and Liberation fonts require.
+const fontsSrc = resolve(nm, "pdfjs-dist/standard_fonts");
+if (!existsSync(fontsSrc)) {
+  throw new Error(
+    `Missing vendor source: ${fontsSrc}\nRun \`npm install\` first so pdfjs-dist is present.`,
+  );
+}
+for (const name of readdirSync(fontsSrc)) {
+  if (!statSync(resolve(fontsSrc, name)).isFile()) continue;
+  copy(resolve(fontsSrc, name), resolve(fontsOut, name));
+}
+
+console.log(
+  `Vendored tesseract assets into ${out}, zxing into ${zxingOut}, pdf.js fonts into ${fontsOut}`,
+);
