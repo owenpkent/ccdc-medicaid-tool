@@ -149,32 +149,30 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        // Function form so React is actually isolated. The object form let Rollup
-        // hoist react/react-dom into the aria chunk (shared dependency), leaving
-        // an empty "react" chunk and coupling React's cache lifetime to aria.
+        // `codeSplitting` is rolldown's native grouping API. The older
+        // `manualChunks` function is still accepted but no longer isolates
+        // React: rolldown left a stub "react" chunk and hoisted react and
+        // react-dom's real bodies into the aria chunk (shared dependency),
+        // coupling React's cache lifetime to aria. Groups are matched in
+        // order, first match wins, so the exact node_modules/react/ match
+        // runs before the broader aria patterns.
         // pdfjs-dist, tesseract.js, and pdf-lib are dynamically imported, so they
         // get their own lazy chunks without being named here.
-        manualChunks(id) {
-          if (
-            id.includes("node_modules/react/") ||
-            id.includes("node_modules/react-dom/") ||
-            id.includes("node_modules/scheduler/")
-          ) {
-            return "react";
-          }
-          if (
-            id.includes("react-aria-components") ||
-            id.includes("@react-aria/") ||
-            id.includes("@react-stately/") ||
-            id.includes("@react-types/") ||
-            id.includes("@internationalized/")
-          ) {
-            return "aria";
-          }
-          if (id.includes("react-intl") || id.includes("@formatjs/")) {
-            return "intl";
-          }
-          return undefined;
+        codeSplitting: {
+          groups: [
+            {
+              name: "react",
+              test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            },
+            {
+              name: "aria",
+              test: /node_modules[\\/](react-aria-components|@react-aria[\\/]|@react-stately[\\/]|@react-types[\\/]|@internationalized[\\/])/,
+            },
+            {
+              name: "intl",
+              test: /node_modules[\\/](react-intl|@formatjs[\\/])/,
+            },
+          ],
         },
       },
     },
