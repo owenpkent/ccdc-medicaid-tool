@@ -10,6 +10,11 @@
  * marks to their plain equivalents to stay safely within that encoding.
  */
 import type { PDFFont } from "pdf-lib";
+// Static, unlike pdf-lib above: the download helper is a few lines with no
+// dependencies of its own, and the fill flow already imports it statically, so
+// a dynamic import here cannot split it into its own chunk. It would only earn
+// a bundler warning.
+import { downloadPdfBytes } from "./download";
 import type { LetterClassification } from "./rules";
 
 export interface SummaryStrings {
@@ -126,6 +131,5 @@ export async function downloadSummaryPdf(
   fileName = "coverage-compass-summary.pdf",
 ): Promise<void> {
   const bytes = await buildSummaryPdf(c, s);
-  const { downloadPdfBytes } = await import("./download");
   downloadPdfBytes(bytes, fileName);
 }
