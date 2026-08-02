@@ -67,13 +67,18 @@ describe("vendored runtime asset URLs", () => {
     }
   });
 
-  it("resolve to files that exist once the assets are vendored", () => {
-    // public/vendor is gitignored and pretest does not run vendor:ocr, so this
-    // only asserts when a dev or build run has populated it (in CI it is absent
-    // at test time and the check is skipped). When it is present, a copy left
-    // over from an older package version means the app would 404 on its wasm.
+  it("resolve to files that exist once the assets are vendored", (ctx) => {
+    // public/vendor is gitignored, so this check depends on something having
+    // populated it. `pretest` runs vendor:ocr for exactly that reason: without
+    // it the directory was absent in CI, this check returned early, and the one
+    // test that can catch an upstream package dropping or renaming a file we
+    // copy reported as a pass on every run. It is still possible to reach here
+    // with nothing vendored (running vitest directly, bypassing pretest), so
+    // that case skips out loud rather than silently passing.
     const paths = vendorPaths();
-    if (!existsSync(resolve(WEB, "public", "vendor"))) return;
+    if (!existsSync(resolve(WEB, "public", "vendor"))) {
+      ctx.skip("public/vendor is not populated; run `npm run vendor:ocr`");
+    }
     const wanted = [
       `${paths.zxing}/zxing_reader.wasm`,
       `${paths.tesseract}/worker.min.js`,
