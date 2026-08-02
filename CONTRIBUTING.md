@@ -52,7 +52,7 @@ The app lives in [`web/`](web/). Run every command below from that directory unl
 
 ### Node version
 
-Use **Node 22**. The version is pinned in [`web/.nvmrc`](web/.nvmrc) and required in `web/package.json` (`"node": ">=22.0.0"`). `web/.npmrc` sets `engine-strict=true`, so an older Node fails at `npm install` with a clear message instead of breaking something subtle later. If you use `nvm`:
+Use **Node 22.22.2 or newer**. The version is pinned in [`web/.nvmrc`](web/.nvmrc) and required in `web/package.json` (`"node": ">=22.22.2"`). `web/.npmrc` sets `engine-strict=true`, so an older Node fails at `npm install` with a clear message instead of breaking something subtle later. If you use `nvm`:
 
 ```bash
 cd web

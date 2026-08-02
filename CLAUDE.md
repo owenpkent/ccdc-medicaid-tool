@@ -15,7 +15,7 @@ Free, open-source, privacy-local web tool that helps disabled Coloradans keep th
 - `web/` the app; `web/src/lib/` the engine (rules, deadline, fill, extract, archive); `web/src/components/` UI; `rules/co/` the YAML rule library; `docs/` specs/architecture/privacy/accessibility; `research/` anonymized samples (not published).
 
 ## Build, run, test
-Run every command from `web/` with Node 20 (pinned in `web/.nvmrc`).
+Run every command from `web/` with Node 22 (pinned in `web/.nvmrc`; the floor is 22.22.2).
 - `npm install`, then `npm run dev` (http://localhost:5173). `predev`/`prebuild` auto-run `gen:rules` + `vendor:ocr`.
 - `npm run build` runs `tsc --noEmit` then `vite build`. `npm run preview` serves the build.
 - `npm run test` (Vitest, includes the axe-core and privacy-guard checks) and `npm run lint` must pass before a PR. CI (`.github/workflows/ci.yml`) runs `npm ci` at the repo root then in `web/`, then lint, test, build.
