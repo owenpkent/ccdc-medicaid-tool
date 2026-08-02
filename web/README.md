@@ -11,20 +11,23 @@ npm run dev
 
 Then open http://localhost:5173.
 
-`npm install` followed by `npm run dev` (or `npm run build`) is all you need: the
-`predev` / `prebuild` hooks generate the typed rule module from the YAML
-(`gen:rules`) and vendor the runtime assets our libraries fetch at run time
-(tesseract.js, zxing-wasm, and pdf.js's standard PDF fonts) from `node_modules`
-into `public/vendor` (`vendor:ocr`). The vendored assets (~40 MB) are gitignored
-and reproducible from the lockfile.
+`npm install` followed by `npm run dev` (or `npm run build`, or `npm run test`)
+is all you need: the `predev` / `prebuild` / `pretest` hooks generate the typed
+rule module from the YAML (`gen:rules`) and vendor the runtime assets our
+libraries fetch at run time (tesseract.js, zxing-wasm, and pdf.js's standard PDF
+fonts) from `node_modules` into `public/vendor` (`vendor:ocr`). The vendored
+assets (~40 MB) are gitignored and reproducible from the lockfile. Repeat runs
+are nearly free: the copier skips when the installed version's files are already
+in place.
 
 They land in a directory named for the installed package versions (for example
-`public/vendor/zxing/2.2.4-3ea97620`), and `vite.config.ts` injects that same
+`public/vendor/zxing/<version>-<hash>`), and `vite.config.ts` injects that same
 path into the app. Upgrading tesseract.js, zxing-wasm, or pdfjs-dist therefore
 changes the URL the app requests, so the service worker's 90-day CacheFirst cache
 of `/vendor/` cannot pair new JavaScript glue with an old cached wasm binary.
 `vendor:ocr` deletes the previous version's directory, so only one copy is ever
-on disk.
+on disk, and `src/lib/vendor-assets.test.ts` fails if the path the app requests
+and the path the copier wrote ever drift apart.
 
 ## Build
 
@@ -42,7 +45,7 @@ npm run test:watch   # watch mode
 
 ## Stack
 
-- Vite + React 18 + TypeScript (strict)
+- Vite + React 19 + TypeScript (strict)
 - React Aria Components for accessible primitives (DropZone, FileTrigger, Button)
 - react-intl for English/Spanish i18n
 - pdf.js for PDF text extraction (client-side, lazy-loaded; worker bundled local)
@@ -93,6 +96,7 @@ src/
 |   |                        import of typed answers from a filled packet
 |   |-- pdf.ts               pdf.js text extraction (encrypted/invalid PDF handling)
 |   |-- ocr.ts               tesseract.js OCR over the vendored assets (read side)
+|   |-- vendor-assets.ts     build-injected URLs for the vendored OCR/barcode/font assets
 |   |-- deadline.ts          bilingual deadline-date extraction
 |   |-- rules.ts             deterministic classifier over the rule library
 |   |-- plainLanguage.ts     locale resolution for rule content
@@ -104,7 +108,10 @@ src/
 
 scripts/
 |-- gen-rules.mjs            compile rules/co/letter-types.yaml -> src/lib/rules.generated.ts
-`-- vendor-ocr.mjs           copy tesseract worker/WASM/language data + zxing WASM into public/vendor
+|-- gen-example-barcode.ts   render the fictional example-ID PDF417 barcode from its payload
+|-- vendor-assets.mjs        derives the vendored asset paths; the copier and the app share it
+`-- vendor-ocr.mjs           copy tesseract worker/WASM/language data, zxing WASM, and pdf.js
+                             standard fonts into public/vendor
 ```
 
 ## Editing the rules

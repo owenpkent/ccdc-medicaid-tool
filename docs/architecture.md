@@ -40,7 +40,7 @@ headless, it composes with the accessible shell unchanged.
 
 - **Build:** Vite
 - **Language:** TypeScript (strict)
-- **UI:** React 18+
+- **UI:** React 19
 - **Accessible primitives:** [React Aria Components](https://react-spectrum.adobe.com/react-aria/) (the most accessible UI primitives library available; Adobe-maintained)
 - **PDF parsing (read side):** [pdf.js](https://mozilla.github.io/pdf.js/) (Mozilla; runs entirely client-side)
 - **PDF form filling (write side):** [pdf-lib](https://pdf-lib.js.org/) (pure client-side; proven in CDASS Enroll). pdf.js reads incoming letters and supporting documents; pdf-lib fills official forms. The two coexist in the browser with no server.

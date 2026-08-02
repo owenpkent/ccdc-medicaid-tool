@@ -11,7 +11,7 @@ Free, open-source, privacy-local web tool that helps disabled Coloradans keep th
 - **Accessibility is a hard gate.** WCAG 2.2 AA. axe-core tests and `eslint-plugin-jsx-a11y` (warnings fail) block PRs. Ship English and Spanish together; Spanish stays flagged as unreviewed in the UI until the YAML `es_reviewed` flag is true (`ES_REVIEWED`).
 
 ## Stack & layout
-- Vite + React 18 + TypeScript (strict, `noUncheckedIndexedAccess` on); react-aria-components, react-intl; pdf.js, tesseract.js, zxing-wasm, pdf-lib (all client-side, lazy-loaded); vite-plugin-pwa. Deliberately no Tailwind, no router, no state library in v0.1.
+- Vite + React 19 + TypeScript (strict, `noUncheckedIndexedAccess` on); react-aria-components, react-intl; pdf.js, tesseract.js, zxing-wasm, pdf-lib (all client-side, lazy-loaded); vite-plugin-pwa. Deliberately no Tailwind, no router, no state library in v0.1.
 - `web/` the app; `web/src/lib/` the engine (rules, deadline, fill, extract, archive); `web/src/components/` UI; `rules/co/` the YAML rule library; `docs/` specs/architecture/privacy/accessibility; `research/` anonymized samples (not published).
 
 ## Build, run, test
