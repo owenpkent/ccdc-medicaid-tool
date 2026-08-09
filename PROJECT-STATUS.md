@@ -115,7 +115,7 @@ The integration model is decided: adopt the engine into the Coverage Compass web
 
 ### v0.1 Notice Triage (target August 2026)
 
-Drop-a-letter, get-a-summary. **The read side is built:** pdf.js plus tesseract.js read the letter on-device and a deterministic classifier matches it against the advocate-editable YAML rule library and explains it in plain language, with the deadline and next steps, in English or Spanish. What remains before it ships, against the acceptance criteria in [`docs/spec-v0.1.md`](docs/spec-v0.1.md): CCDC review of the rule content, 10 to 20 real anonymized Colorado letters to validate the classifier, native-speaker review of the Spanish, manual NVDA/VoiceOver/keyboard passes, a 6th-grade reading-level check in CI, and a deploy. Ships before HCPF begins mailing.
+Drop-a-letter, get-a-summary. **The read side is built:** pdf.js plus tesseract.js read the letter on-device and a deterministic classifier matches it against the advocate-editable YAML rule library and explains it in plain language, with the deadline and next steps, in English or Spanish. What remains before it ships, against the acceptance criteria in [`docs/spec-v0.1.md`](docs/spec-v0.1.md): CCDC review of the rule content, 10 to 20 real anonymized Colorado letters to validate the classifier, native-speaker review of the Spanish, manual NVDA/VoiceOver/keyboard passes, and a deploy. Ships before HCPF begins mailing.
 
 ### v0.2 Exemption Packet (target November 2026 to January 2027)
 
@@ -172,7 +172,7 @@ Full set of open questions: [`research/prior-art.md`](research/prior-art.md) sec
 - **Stack drift.** Tesseract.js, pdf.js, and pdf-lib are heavy. The architecture target is < 250 KB gzipped bundle and < 3s TTI on a 2019 Chromebook. As of the v0.1 read-side build, pdf.js, tesseract.js, and pdf-lib are each lazy-loaded into their own chunks, so the initial JS is roughly 110 KB gzipped (entry plus React Aria plus react-intl), within budget. TTI on real low-end hardware still needs measuring.
 - **Form-revision drift.** The fill layer maps exact PDF field names per form revision. Colorado can re-issue a form with renamed fields. The engine degrades a missing or renamed field to a logged warning rather than a crash, and the exact-copy smoke test guards regressions, but each new form revision needs a fresh field dump and mapping.
 - **CfA collision.** If CfA quietly builds a Medicaid version of their tool before we ship, we should reconsider the lane. Phase 2 outreach is partly to surface this.
-- **Reading-level enforcement.** The 6th-grade Flesch-Kincaid target is a hard project rule, not a wish. Need a working CI tool before user-facing copy lands.
+- **Reading-level enforcement.** The 6th-grade Flesch-Kincaid target is a hard project rule, not a wish. The CI check blocks on it as of #64, but it scores only the rule-library strings. UI chrome in `src/` (react-intl messages) is unscored, so the guard still has a gap.
 
 ## How to help
 

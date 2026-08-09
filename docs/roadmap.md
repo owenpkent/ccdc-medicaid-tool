@@ -33,7 +33,7 @@ Ships before the first wave of notification letters goes out from HCPF in August
 - [ ] Plain-language explanation library reviewed by a CCDC advocate
 - [ ] Manual screen-reader pass (NVDA, VoiceOver, keyboard-only)
 - [ ] 10 to 20 real anonymized Colorado letters to validate the classifier
-- [ ] 6th-grade reading-level check enforced in CI
+- [x] 6th-grade reading-level check enforced in CI (blocking as of #64; scores the rule-library strings, not yet UI chrome in `src/`)
 - [ ] Hosted on a stable URL with SRI and reproducible build (a demo deployment is live at [coverage-compass-6ky.pages.dev](https://coverage-compass-6ky.pages.dev) since 2026-07-01, behind a click-through release; SRI and the reproducible-build story are still pending)
 - [ ] CCDC advocate user test passes
 

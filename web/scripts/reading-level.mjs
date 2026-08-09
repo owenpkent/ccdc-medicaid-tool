@@ -7,9 +7,9 @@
 // rules/co/letter-types.yaml.
 //
 // Run it with `npm run check:reading-level` from web/. It reports by default
-// and exits 0 even when a string is over target, so a contributor is never
-// blocked by prose that predates the check. Pass --strict to exit 1 instead;
-// that is the switch to flip once the existing copy is under target.
+// and exits 0 even when a string is over target, so running it locally never
+// blocks you mid-edit. Pass --strict to exit 1 instead. CI passes --strict
+// (.github/workflows/reading-level.yml), so an over-target string fails there.
 //
 // No network, no new dependencies: js-yaml is already a devDependency here
 // (scripts/gen-rules.mjs uses it), and the scoring is plain arithmetic below.
@@ -166,9 +166,13 @@ console.log(
 );
 
 if (onActions) {
+  // Match the annotation to the consequence: under --strict an over-target
+  // string fails the build, and GitHub renders `::warning` in a passing-looking
+  // yellow that would undersell that.
+  const level = strict ? "error" : "warning";
   for (const r of over) {
     const msg = `${r.typeId} ${r.label} reads at grade ${r.grade.toFixed(1)}, above the target of ${GRADE_TARGET}. Shorter sentences and shorter words bring this down.`;
-    console.log(`::warning file=${srcLabel},line=${r.line},title=Reading level above target::${msg}`);
+    console.log(`::${level} file=${srcLabel},line=${r.line},title=Reading level above target::${msg}`);
   }
   const summaryPath = process.env.GITHUB_STEP_SUMMARY;
   if (summaryPath) {
@@ -181,7 +185,9 @@ if (onActions) {
     const body = [
       `### Reading level (Flesch-Kincaid)`,
       "",
-      `Target: grade ${GRADE_TARGET} or below. This check reports and does not fail the build.`,
+      strict
+        ? `Target: grade ${GRADE_TARGET} or below. A string above target fails this build.`
+        : `Target: grade ${GRADE_TARGET} or below. This check reports and does not fail the build.`,
       "",
       `| Letter type | Field | Grade | Status |`,
       `| --- | --- | --- | --- |`,

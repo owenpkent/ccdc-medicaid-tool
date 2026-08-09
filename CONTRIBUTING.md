@@ -139,7 +139,7 @@ Practical note for contributors: when you change the pure engine modules (the sc
 - **No analytics, telemetry, or error reporting that leaves the device.** Ever.
 - **No `eval` or dynamic code execution.**
 - **Accessibility regressions block PRs.** Automated a11y tests (axe-core) plus manual screen-reader testing must pass.
-- **Plain language: 6th grade Flesch-Kincaid.** Verified by an automated reading-level check.
+- **Plain language: 6th grade Flesch-Kincaid.** Verified by an automated reading-level check that fails the build on any rule-library string above target.
 - **No PII, ever, in the repo.** Sample letters must be anonymized. Only blank form templates belong here, never filled copies or real data. This rule applies to sample letters, test fixtures, screenshots, and template content alike.
 - **No em dashes in any written copy.** Use periods, colons, commas, or parentheses.
 

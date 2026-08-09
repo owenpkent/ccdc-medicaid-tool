@@ -39,8 +39,8 @@ export const LETTER_RULES = [
       "es": "Colorado Medicaid necesita que confirme que todavía califica. Devuelva los papeles, o hágalo en PEAK. Si no lo hace, su cobertura puede terminar."
     },
     "doNothingConsequence": {
-      "en": "Your Health First Colorado coverage will end on the date in the letter.",
-      "es": "Su cobertura de Health First Colorado terminará en la fecha que dice la carta."
+      "en": "Your Health First Colorado coverage will end. The date is in the letter.",
+      "es": "Su cobertura de Health First Colorado va a terminar. La fecha está en la carta."
     },
     "deadline": {
       "daysFromNotice": 60,
@@ -95,12 +95,12 @@ export const LETTER_RULES = [
       ]
     },
     "plainLanguage": {
-      "en": "Colorado Medicaid is ending your coverage because they did not get the paperwork they asked for. You can usually fix this if you act fast.",
-      "es": "Colorado Medicaid va a terminar su cobertura porque no recibieron los papeles que pidieron. Por lo general puede arreglarlo si actúa rápido."
+      "en": "Colorado Medicaid is ending your coverage. They did not get the paperwork they asked for. You can usually fix this if you act fast.",
+      "es": "Colorado Medicaid va a terminar su cobertura. No recibieron los papeles que pidieron. Por lo general puede arreglarlo si actúa rápido."
     },
     "doNothingConsequence": {
-      "en": "Your Health First Colorado coverage will end on the date in the letter.",
-      "es": "Su cobertura de Health First Colorado terminará en la fecha que dice la carta."
+      "en": "Your Health First Colorado coverage will end. The date is in the letter.",
+      "es": "Su cobertura de Health First Colorado va a terminar. La fecha está en la carta."
     },
     "deadline": {
       "daysFromNotice": 60,
@@ -156,8 +156,8 @@ export const LETTER_RULES = [
       "es": "Colorado tiene una regla nueva. Algunos adultos con Medicaid deben mostrar que trabajan 80 horas al mes. Otros no tienen que hacerlo. Esto se llama una exención, y muchas personas con discapacidad la tienen. Esta carta dice qué cree Colorado que usted debe hacer."
     },
     "doNothingConsequence": {
-      "en": "If the letter says you must comply and you do not, you can lose coverage starting in 2027.",
-      "es": "Si la carta dice que usted debe cumplir y no lo hace, puede perder la cobertura a partir de 2027."
+      "en": "The letter may say you must comply. If it does and you do not, you can lose coverage starting in 2027.",
+      "es": "La carta puede decir que usted debe cumplir. Si lo dice y no lo hace, puede perder la cobertura a partir de 2027."
     },
     "deadline": {
       "daysFromNotice": null,
@@ -210,8 +210,8 @@ export const LETTER_RULES = [
       ]
     },
     "plainLanguage": {
-      "en": "Colorado made a decision about whether you have to follow the work-reporting rules. The letter says yes or no.",
-      "es": "Colorado tomó una decisión sobre si usted tiene que seguir las reglas de reporte de trabajo. La carta dice que sí o que no."
+      "en": "Colorado made a decision about the work-reporting rules. The letter says if they apply to you. Look for a yes or a no.",
+      "es": "Colorado tomó una decisión sobre las reglas de reporte de trabajo. La carta dice si aplican a usted. Busque un sí o un no."
     },
     "doNothingConsequence": {
       "en": "If you disagree, you have a limited time to appeal. Check the date on the letter.",
@@ -251,8 +251,8 @@ export const LETTER_RULES = [
       "es": "No estamos seguros de qué tipo de carta es esta. Llame a CCDC y le pueden ayudar a leerla."
     },
     "doNothingConsequence": {
-      "en": "Do not ignore Medicaid letters. They usually have a deadline.",
-      "es": "No ignore las cartas de Medicaid. Por lo general tienen una fecha límite."
+      "en": "Do not ignore Medicaid letters. Most of them have a deadline.",
+      "es": "No ignore las cartas de Medicaid. La mayoría tienen una fecha límite."
     },
     "deadline": {
       "daysFromNotice": null,
