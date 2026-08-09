@@ -54,6 +54,12 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
+      # web/package.json requires npm >= 12 and web/.npmrc sets engine-strict,
+      # so `npm ci` fails on the npm that ships with Node 22. See ci.yml for
+      # why the floor exists.
+      - name: Use npm 12
+        run: npm install -g npm@12
+
       # The script needs js-yaml, already a devDependency in web/. Installing
       # from the lockfile keeps this reproducible and adds no new package. The
       # script itself makes no network calls and reads only the rule YAML.

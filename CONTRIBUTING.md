@@ -50,14 +50,17 @@ Coverage Compass is a 100 percent client-side web app. It is built around a prov
 
 The app lives in [`web/`](web/). Run every command below from that directory unless noted.
 
-### Node version
+### Node and npm versions
 
-Use **Node 22.22.2 or newer**. The version is pinned in [`web/.nvmrc`](web/.nvmrc) and required in `web/package.json` (`"node": ">=22.22.2"`). `web/.npmrc` sets `engine-strict=true`, so an older Node fails at `npm install` with a clear message instead of breaking something subtle later. If you use `nvm`:
+Use **Node 22.22.2 or newer** and **npm 12 or newer**. Both are required in `web/package.json` (`"node": ">=22.22.2"`, `"npm": ">=12"`), and the Node version is also pinned in [`web/.nvmrc`](web/.nvmrc). `web/.npmrc` sets `engine-strict=true`, so a version below either floor fails at `npm install` with a clear message instead of breaking something subtle later. If you use `nvm`:
 
 ```bash
 cd web
 nvm use
+npm install -g npm@12   # Node 22 still ships npm 11
 ```
+
+The npm floor is about lockfile fidelity, not features. `web/package-lock.json` carries `libc` entries, which npm reads to pick musl or glibc builds of optional platform-specific packages. npm 11 and older drop them silently on any write, which buries a one-line dependency bump in about 84 lines of unrelated deletions. Node 22.22.2 is the oldest Node that npm 12 accepts, so the two floors line up exactly.
 
 ### Commands
 

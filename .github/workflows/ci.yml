@@ -29,6 +29,16 @@ jobs:
             package-lock.json
             web/package-lock.json
 
+      # The lockfile carries `libc` entries, which npm reads to pick musl vs
+      # glibc builds of optional platform-specific packages. npm 11 and older
+      # silently strip them on any write, so a contributor on the npm that
+      # ships with Node 22 turns a one-line dependency bump into ~84 lines of
+      # unrelated deletions. web/package.json requires npm >= 12 and
+      # web/.npmrc sets engine-strict, so the web install below would fail
+      # outright without this step. Install it globally before either install.
+      - name: Use npm 12
+        run: npm install -g npm@12
+
       # Root holds fake-indexeddb, which web/src/lib/archive.test.ts resolves
       # via node_modules hoisting. Install it first so the test suite loads.
       - name: Install root deps
