@@ -1,0 +1,66 @@
+name: Reading level
+
+# Plain language is a v0.1 acceptance criterion (docs/spec-v0.1.md: "All copy is
+# at or below 6th grade Flesch-Kincaid, verified by tool"). This workflow is
+# that tool for the member-facing strings in the rule library.
+#
+# THRESHOLD: grade 6 (6th-grade Flesch-Kincaid).
+#
+# WARN, DO NOT FAIL. The check reports grades and annotates any string above
+# grade 6, but always exits 0. Six of the ten strings in letter-types.yaml are
+# currently above target, so failing here would block every PR on prose that
+# predates the check. The script already supports the stricter behavior: add
+# `-- --strict` to the run step below to turn findings into a build failure.
+# That switch is worth flipping once the existing copy is rewritten and a CCDC
+# advocate has reviewed the result.
+#
+# Spanish is deliberately out of scope: Flesch-Kincaid is calibrated on English
+# and produces a meaningless number for Spanish text.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "rules/co/letter-types.yaml"
+      - "web/scripts/reading-level.mjs"
+      - ".github/workflows/reading-level.yml"
+  push:
+    branches: [main]
+    paths:
+      - "rules/co/letter-types.yaml"
+      - "web/scripts/reading-level.mjs"
+      - ".github/workflows/reading-level.yml"
+
+# Least-privilege default token: this workflow only reads the repo. Its output
+# goes to the job log, the step summary, and inline annotations, none of which
+# need write access.
+permissions:
+  contents: read
+
+concurrency:
+  group: reading-level-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reading-level:
+    name: plain-language grade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # The script needs js-yaml, already a devDependency in web/. Installing
+      # from the lockfile keeps this reproducible and adds no new package. The
+      # script itself makes no network calls and reads only the rule YAML.
+      - name: Install web deps
+        working-directory: web
+        run: npm ci
+
+      - name: Check reading level
+        working-directory: web
+        run: npm run check:reading-level
