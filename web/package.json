@@ -6,6 +6,7 @@
   "scripts": {
     "gen:rules": "node scripts/gen-rules.mjs",
     "gen:example-barcode": "vite-node scripts/gen-example-barcode.ts",
+    "check:reading-level": "node scripts/reading-level.mjs",
     "vendor:ocr": "node scripts/vendor-ocr.mjs",
     "predev": "npm run gen:rules && npm run vendor:ocr",
     "dev": "vite",
