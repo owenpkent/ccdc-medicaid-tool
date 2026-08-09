@@ -6,13 +6,15 @@ name: Reading level
 #
 # THRESHOLD: grade 6 (6th-grade Flesch-Kincaid).
 #
-# WARN, DO NOT FAIL. The check reports grades and annotates any string above
-# grade 6, but always exits 0. Six of the ten strings in letter-types.yaml are
-# currently above target, so failing here would block every PR on prose that
-# predates the check. The script already supports the stricter behavior: add
-# `-- --strict` to the run step below to turn findings into a build failure.
-# That switch is worth flipping once the existing copy is rewritten and a CCDC
-# advocate has reviewed the result.
+# BLOCKING. The check annotates any string above grade 6 and exits non-zero,
+# so copy that regresses past the target fails the build.
+#
+# It ran in warn-only mode from #63 until #64, because six of the ten strings
+# predated the check and failing on them would have blocked every unrelated PR.
+# Those six were rewritten, so the mode switch cost nothing and the guard is
+# now real. If a rewrite genuinely cannot reach grade 6 without becoming
+# misleading, accuracy wins: say so on the PR and raise it with a CCDC
+# advocate rather than bending the copy to satisfy the formula.
 #
 # Spanish is deliberately out of scope: Flesch-Kincaid is calibrated on English
 # and produces a meaningless number for Spanish text.
@@ -69,4 +71,4 @@ jobs:
 
       - name: Check reading level
         working-directory: web
-        run: npm run check:reading-level
+        run: npm run check:reading-level -- --strict

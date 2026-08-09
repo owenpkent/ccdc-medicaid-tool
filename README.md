@@ -110,7 +110,7 @@ New for Coverage Compass (the shell around the engine):
 - Rule library seeded for Colorado: five letter types (now bilingual, driving the classifier) and eight exemption categories. All entries marked "verify with CCDC" until reviewed.
 - Fourteen static HTML mockups exploring UI archetypes across all three events plus the triage entry ([`docs/ui-brainstorm.md`](docs/ui-brainstorm.md)).
 
-Still ahead: CCDC review of the rule content and 10 to 20 real anonymized Colorado letters to validate the classifier, native-speaker review of the Spanish, manual NVDA/VoiceOver/keyboard testing, a 6th-grade reading-level check in CI, hardening the demo deployment (SRI, reproducible build, legal review of the release wording), advocate-in-the-loop review, the Medicaid-specific schema growth (household, income, exemption category and evidence, renewal dates, the CDASS care-hours worksheet which is the IHSS Care Plan), and extending carry-forward pre-fill from the CDASS packet to Medicaid renewals.
+Still ahead: CCDC review of the rule content and 10 to 20 real anonymized Colorado letters to validate the classifier, native-speaker review of the Spanish, manual NVDA/VoiceOver/keyboard testing, hardening the demo deployment (SRI, reproducible build, legal review of the release wording), advocate-in-the-loop review, the Medicaid-specific schema growth (household, income, exemption category and evidence, renewal dates, the CDASS care-hours worksheet which is the IHSS Care Plan), and extending carry-forward pre-fill from the CDASS packet to Medicaid renewals.
 
 Full snapshot: [`PROJECT-STATUS.md`](PROJECT-STATUS.md).
 
