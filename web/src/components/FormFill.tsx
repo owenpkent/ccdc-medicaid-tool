@@ -311,7 +311,11 @@ export function FormFill() {
               <FormattedMessage id="fill.demoRowLabel" />
             </p>
             <div className="fill-actions">
-              <Button className="btn btn-secondary" isDisabled={scanning} onPress={loadExamplePerson}>
+              <Button
+                className="btn btn-secondary"
+                isDisabled={scanning}
+                onPress={loadExamplePerson}
+              >
                 {intl.formatMessage({ id: "fill.demoLoadPerson" })}
               </Button>
               <Button
@@ -445,9 +449,7 @@ export function FormFill() {
           </p>
           <ReviewList
             sections={[...PACKET_SECTIONS, ...EMPLOYER_SECTIONS]}
-            valuesFor={(sec) =>
-              EMPLOYER_SECTIONS.includes(sec) ? employerValues : profileValues
-            }
+            valuesFor={(sec) => (EMPLOYER_SECTIONS.includes(sec) ? employerValues : profileValues)}
             emptyText={intl.formatMessage({ id: "fill.reviewEmpty" })}
             yesText={intl.formatMessage({ id: "fill.yes" })}
             providedText={intl.formatMessage({ id: "fill.provided" })}

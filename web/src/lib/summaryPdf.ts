@@ -32,10 +32,7 @@ export interface SummaryStrings {
 }
 
 function sanitize(s: string): string {
-  return s
-    .replace(/…/g, "...")
-    .replace(/[‘’]/g, "'")
-    .replace(/[“”]/g, '"');
+  return s.replace(/…/g, "...").replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
 }
 
 function wrap(text: string, font: PDFFont, size: number, maxWidth: number): string[] {

@@ -18,8 +18,7 @@ describe("Triage", () => {
     const box = openPaste();
     fireEvent.change(box, {
       target: {
-        value:
-          "We did not receive your renewal packet. Your coverage will end on June 30, 2026.",
+        value: "We did not receive your renewal packet. Your coverage will end on June 30, 2026.",
       },
     });
     fireEvent.click(screen.getByRole("button", { name: /check this text/i }));
@@ -29,9 +28,7 @@ describe("Triage", () => {
 
   it("runs an example letter through the same flow and resets cleanly", async () => {
     renderWithProviders(<Triage />);
-    fireEvent.click(
-      screen.getByRole("button", { name: /coverage ending: missing paperwork/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /coverage ending: missing paperwork/i }));
     expect(await screen.findByText(/here is what we found/i)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /check another letter/i }));
     // Back on the upload view: dropzone and examples are offered again.

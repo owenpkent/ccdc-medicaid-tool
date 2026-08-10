@@ -54,9 +54,7 @@ describe("App", () => {
   it("shows the Terms of Use without requiring acceptance, with no axe violations", async () => {
     window.location.hash = "#terms";
     const { container } = renderWithProviders(<App />);
-    expect(
-      screen.getByRole("heading", { level: 1, name: /terms of use/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /terms of use/i })).toBeInTheDocument();
     // The release/waiver section is present.
     expect(screen.getByText(/waive, release, and discharge/i)).toBeInTheDocument();
     // 23 rules passed when measured; the floor proves axe looked (see test-utils).
@@ -66,9 +64,7 @@ describe("App", () => {
   it("shows the Privacy Notice without requiring acceptance", () => {
     window.location.hash = "#privacy";
     renderWithProviders(<App />);
-    expect(
-      screen.getByRole("heading", { level: 1, name: /privacy notice/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /privacy notice/i })).toBeInTheDocument();
     expect(screen.getByText(/cannot guarantee privacy or security/i)).toBeInTheDocument();
   });
 

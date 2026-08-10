@@ -28,6 +28,12 @@ export interface ExtractDeadlineOptions {
 
 // Month name -> 1-based month number, English and Spanish, including common
 // abbreviations. Keys are diacritic-stripped and lowercased to match normalize().
+//
+// Left unformatted on purpose, as is STATE_NAMES in fill/forms/i9.ts. Reading
+// this as a table is the point: Prettier gives every key its own line, which
+// turns 10 scannable rows into 40 and buries the English/Spanish split that the
+// comments below mark.
+// prettier-ignore
 const MONTHS: Record<string, number> = {
   // English
   january: 1, jan: 1, february: 2, feb: 2, march: 3, mar: 3, april: 4, apr: 4,
@@ -43,20 +49,47 @@ const MONTH_ALTERNATION = Object.keys(MONTHS).join("|");
 
 // Deadline trigger words/phrases, English and Spanish (diacritic-stripped).
 const DEADLINE_KEYWORDS = [
-  "no later than", "by no later than", "due by", "due date", "due on", "due",
-  "respond by", "reply by", "return by", "submit by", "postmarked by",
-  "deadline", "must respond by", "respond no later than",
-  "respond before", "reply before", "submit before", "return before",
+  "no later than",
+  "by no later than",
+  "due by",
+  "due date",
+  "due on",
+  "due",
+  "respond by",
+  "reply by",
+  "return by",
+  "submit by",
+  "postmarked by",
+  "deadline",
+  "must respond by",
+  "respond no later than",
+  "respond before",
+  "reply before",
+  "submit before",
+  "return before",
   "you have until",
   // Termination anchors: the date coverage ends is the date a termination letter
   // is really about, so surface it as "the date in the letter". Kept specific so
   // an enrollment/effective date is not mistaken for an action deadline.
-  "end on", "ends on", "ending on", "will end on", "terminate on",
-  "coverage ends", "coverage will end",
+  "end on",
+  "ends on",
+  "ending on",
+  "will end on",
+  "terminate on",
+  "coverage ends",
+  "coverage will end",
   // Spanish
-  "a mas tardar", "antes del", "fecha limite", "vence el", "vence",
-  "fecha de vencimiento", "responder antes del", "debe responder antes",
-  "terminara el", "termina el", "su cobertura terminara",
+  "a mas tardar",
+  "antes del",
+  "fecha limite",
+  "vence el",
+  "vence",
+  "fecha de vencimiento",
+  "responder antes del",
+  "debe responder antes",
+  "terminara el",
+  "termina el",
+  "su cobertura terminara",
 ];
 
 // Bare triggers that read as deadlines only when a date follows immediately:
@@ -170,7 +203,10 @@ function todayISO(now: Date): string {
  * Find the action deadline in a letter. Returns the date and days remaining only
  * when a date sits next to a deadline word; otherwise foundInLetter is false.
  */
-export function extractDeadline(text: string, options: ExtractDeadlineOptions = {}): DeadlineResult {
+export function extractDeadline(
+  text: string,
+  options: ExtractDeadlineOptions = {},
+): DeadlineResult {
   const now = options.now ?? new Date();
   const norm = normalize(text);
   const dates = findDates(norm);
@@ -212,9 +248,7 @@ export function extractDeadline(text: string, options: ExtractDeadlineOptions = 
       if (distance < t.min || distance > t.max) continue;
       const absD = Math.abs(distance);
       const better =
-        best === null ||
-        absD < bestAbs ||
-        (absD === bestAbs && distance >= 0 && bestSigned < 0);
+        best === null || absD < bestAbs || (absD === bestAbs && distance >= 0 && bestSigned < 0);
       if (better) {
         best = d;
         bestAbs = absD;

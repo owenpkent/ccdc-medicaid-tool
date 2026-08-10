@@ -83,11 +83,14 @@ export const TERMS: LegalDoc = {
       ],
     },
     {
-      heading: { en: "6. Provided as is, with no warranty", es: "6. Se ofrece tal como está, sin garantía" },
+      heading: {
+        en: "6. Provided as is, with no warranty",
+        es: "6. Se ofrece tal como está, sin garantía",
+      },
       paragraphs: [
         {
-          en: "The tool is provided \"as is\" and \"as available,\" without warranties of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose, accuracy, and non-infringement. We do not promise the tool will be available, error-free, or uninterrupted.",
-          es: "La herramienta se ofrece \"tal como está\" y \"según disponibilidad,\" sin garantías de ningún tipo, expresas o implícitas, incluidas las garantías de comerciabilidad, idoneidad para un propósito particular, exactitud y no infracción. No prometemos que la herramienta estará disponible, libre de errores o sin interrupciones.",
+          en: 'The tool is provided "as is" and "as available," without warranties of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose, accuracy, and non-infringement. We do not promise the tool will be available, error-free, or uninterrupted.',
+          es: 'La herramienta se ofrece "tal como está" y "según disponibilidad," sin garantías de ningún tipo, expresas o implícitas, incluidas las garantías de comerciabilidad, idoneidad para un propósito particular, exactitud y no infracción. No prometemos que la herramienta estará disponible, libre de errores o sin interrupciones.',
         },
       ],
     },
@@ -113,7 +116,10 @@ export const TERMS: LegalDoc = {
       ],
     },
     {
-      heading: { en: "9. The demonstration can change or end", es: "9. La demostración puede cambiar o terminar" },
+      heading: {
+        en: "9. The demonstration can change or end",
+        es: "9. La demostración puede cambiar o terminar",
+      },
       paragraphs: [
         {
           en: "This is a demonstration. We may change, suspend, or shut down the site at any time, without notice.",
@@ -160,7 +166,10 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     {
-      heading: { en: "2. What the hosting provider sees", es: "2. Qué ve el proveedor de alojamiento" },
+      heading: {
+        en: "2. What the hosting provider sees",
+        es: "2. Qué ve el proveedor de alojamiento",
+      },
       paragraphs: [
         {
           en: "The app's files are served by a hosting provider (Cloudflare Pages). Like any website, when your browser downloads those files, the host sees standard connection information such as your IP address and browser type in its infrastructure logs. That is how loading any website works. We add no analytics and collect none of this ourselves. A strict Content-Security-Policy blocks the app from talking to any other server.",
@@ -169,7 +178,10 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     {
-      heading: { en: "3. Offline copies of the app", es: "3. Copias sin conexión de la aplicación" },
+      heading: {
+        en: "3. Offline copies of the app",
+        es: "3. Copias sin conexión de la aplicación",
+      },
       paragraphs: [
         {
           en: "So the tool works without internet, your browser may store the app's own files (not your documents) on your device. You can remove them by clearing your browser's site data for this site.",

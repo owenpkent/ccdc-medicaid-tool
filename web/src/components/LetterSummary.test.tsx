@@ -25,7 +25,9 @@ describe("LetterSummary", () => {
     expect(screen.getByRole("link", { name: /839-1775/ })).toBeInTheDocument();
 
     // The two result controls.
-    expect(screen.getByRole("button", { name: /download a one-page summary/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /download a one-page summary/i }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /check another letter/i })).toBeInTheDocument();
   });
 
@@ -39,9 +41,7 @@ describe("LetterSummary", () => {
     const c = classifyLetter("It is time to renew your coverage. Respond by 08/01/2026.", {
       now: NOW,
     });
-    const { container } = renderWithProviders(
-      <LetterSummary classification={c} onReset={noop} />,
-    );
+    const { container } = renderWithProviders(<LetterSummary classification={c} onReset={noop} />);
     // 15 rules passed when measured; the floor proves axe looked (see test-utils).
     expect(await axeViolations(container, 8)).toEqual([]);
   });

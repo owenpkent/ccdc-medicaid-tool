@@ -21,7 +21,7 @@ Run every command from `web/` with Node 22 and npm 12 (Node pinned in `web/.nvmr
 - `npm run test` (Vitest, includes the axe-core and privacy-guard checks) and `npm run lint` must pass before a PR. CI (`.github/workflows/ci.yml`) runs `npm ci` at the repo root then in `web/`, then lint, test, build.
 
 ## Conventions
-- Format with `npm run format` (Prettier). Lint is zero-tolerance (`eslint --max-warnings 0`); fix every warning.
+- Format with `npm run format` (Prettier, `printWidth: 100` from the root `.prettierrc.json`); CI runs `npm run format:check` and fails on drift. Lint is zero-tolerance (`eslint --max-warnings 0`); fix every warning.
 - No em dashes anywhere; use periods, colons, commas, or parentheses. User-facing copy targets a 6th-grade reading level.
 - Small, focused PRs off `main` with imperative commit subjects. Cite a source (HCPF, CMS, statute, or a named CCDC reviewer) for every rule-library change.
 

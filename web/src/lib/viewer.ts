@@ -58,9 +58,7 @@ export async function renderPageToCanvas(
 
   const base = { canvas, viewport };
   const params =
-    outputScale !== 1
-      ? { ...base, transform: [outputScale, 0, 0, outputScale, 0, 0] }
-      : base;
+    outputScale !== 1 ? { ...base, transform: [outputScale, 0, 0, outputScale, 0, 0] } : base;
   await page.render(params).promise;
 }
 

@@ -106,9 +106,9 @@ describe("fillPacket2026", () => {
 
     const form = (await PDFDocument.load(out)).getForm();
     expect(form.getCheckBox("Payment by Paper Check").isChecked()).toBe(true);
-    expect(form.getCheckBox("Direct Deposit to Bank Account or Third Party Money App").isChecked()).toBe(
-      false,
-    );
+    expect(
+      form.getCheckBox("Direct Deposit to Bank Account or Third Party Money App").isChecked(),
+    ).toBe(false);
     // No routing digits were spread into the per-digit boxes.
     expect(form.getTextField("Routing number 1").getText() ?? "").toBe("");
   });

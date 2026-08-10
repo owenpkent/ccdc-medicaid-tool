@@ -11,13 +11,7 @@ import { getExampleLetters } from "../fixtures/exampleLetters";
 
 type Phase = "idle" | "working" | "error";
 type ErrorKind =
-  | "encrypted"
-  | "invalidPdf"
-  | "emptyPdf"
-  | "ocrEmpty"
-  | "unsupported"
-  | "heic"
-  | "generic";
+  "encrypted" | "invalidPdf" | "emptyPdf" | "ocrEmpty" | "unsupported" | "heic" | "generic";
 
 // Below this many non-space characters, treat extraction as "nothing readable".
 const MIN_TEXT_CHARS = 12;

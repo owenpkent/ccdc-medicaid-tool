@@ -52,6 +52,13 @@ jobs:
         working-directory: web
         run: npm run lint
 
+      # Formatting drifted unnoticed for the project's whole life because
+      # nothing checked it. Reformatting after the fact cost a 27-file diff;
+      # catching it per PR costs seconds. `npm run format` fixes any failure.
+      - name: Format
+        working-directory: web
+        run: npm run format:check
+
       - name: Test
         working-directory: web
         run: npm test

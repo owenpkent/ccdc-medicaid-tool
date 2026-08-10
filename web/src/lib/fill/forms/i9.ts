@@ -13,7 +13,13 @@ export interface I9Options {
   firstDay?: string;
 }
 
-export function fillI9(form: PDFForm, p: Profile, emp: Employer, opts: I9Options, sig: string): void {
+export function fillI9(
+  form: PDFForm,
+  p: Profile,
+  emp: Employer,
+  opts: I9Options,
+  sig: string,
+): void {
   // Section 1: employee
   setText(form, "Last Name (Family Name)", p.last);
   setText(form, "First Name Given Name", p.first);
@@ -66,7 +72,11 @@ export function fillI9(form: PDFForm, p: Profile, emp: Employer, opts: I9Options
   const employerLine = [emp.employerLast, emp.employerFirst, emp.employerTitle || "Employer"]
     .filter(Boolean)
     .join(", ");
-  setText(form, "Last Name First Name and Title of Employer or Authorized Representative", employerLine);
+  setText(
+    form,
+    "Last Name First Name and Title of Employer or Authorized Representative",
+    employerLine,
+  );
   setText(form, "S2 Todays Date mmddyyyy", sig);
   setText(
     form,
@@ -77,6 +87,9 @@ export function fillI9(form: PDFForm, p: Profile, emp: Employer, opts: I9Options
 }
 
 // "CO" -> "Colorado DMV", matching how the issuing authority is written by hand.
+// Left unformatted on purpose so it stays readable as a table. See the note on
+// MONTHS in lib/deadline.ts.
+// prettier-ignore
 const STATE_NAMES: Record<string, string> = {
   AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
   CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
