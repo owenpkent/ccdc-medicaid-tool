@@ -31,9 +31,7 @@ describe("LetterDropzone", () => {
   it("renders the accessible dropzone label, prompt, and file chooser", () => {
     renderWithProviders(<LetterDropzone onFile={vi.fn()} />);
 
-    expect(
-      screen.getByLabelText(/drop a pdf or photo of your letter here/i),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/drop a pdf or photo of your letter here/i)).toBeInTheDocument();
     expect(screen.getByText(/drop your letter here/i)).toBeInTheDocument();
     expect(visibleFileChooser()).toBeInTheDocument();
   });

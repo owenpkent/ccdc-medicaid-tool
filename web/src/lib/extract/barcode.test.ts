@@ -79,29 +79,18 @@ prepareZXingModule({ overrides: { wasmBinary: readerWasm() } });
  */
 const networkAttempts: string[] = [];
 globalThis.fetch = ((input: unknown) => {
-  const url =
-    typeof input === "string"
-      ? input
-      : String((input as { url?: string }).url ?? input);
+  const url = typeof input === "string" ? input : String((input as { url?: string }).url ?? input);
   networkAttempts.push(url);
-  return Promise.reject(
-    new Error(`barcode.test.ts refused a network request: ${url}`),
-  );
+  return Promise.reject(new Error(`barcode.test.ts refused a network request: ${url}`));
 }) as unknown as typeof fetch;
 
 const dl = () =>
-  readFileSync(
-    resolve(process.cwd(), "public/examples/example-license-barcode.png"),
-  );
-const stateId = () =>
-  readFileSync(resolve(process.cwd(), "src/fixtures/state-id-barcode.png"));
+  readFileSync(resolve(process.cwd(), "public/examples/example-license-barcode.png"));
+const stateId = () => readFileSync(resolve(process.cwd(), "src/fixtures/state-id-barcode.png"));
 
 // Bytes, not a Blob: jsdom's Blob has no arrayBuffer(), and readBarcodes takes
 // a Uint8Array just as happily. The app passes a real browser Blob.
-async function decode(
-  png: Buffer,
-  options = AAMVA_READ_OPTIONS,
-): Promise<string> {
+async function decode(png: Buffer, options = AAMVA_READ_OPTIONS): Promise<string> {
   const results = await readBarcodes(new Uint8Array(png), options);
   const hit = results.find((r) => r.isValid && r.text);
   return hit?.text ?? "";
@@ -125,10 +114,7 @@ describe("license barcode decode -> parse", () => {
    * zxing classifies on. The distinction decides whether the HRI escaping below
    * bites, so a sample that is merely Text would not represent a real card. */
   it("is Binary content, like a real card", async () => {
-    const results = await readBarcodes(
-      new Uint8Array(dl()),
-      AAMVA_READ_OPTIONS,
-    );
+    const results = await readBarcodes(new Uint8Array(dl()), AAMVA_READ_OPTIONS);
     expect(results.find((r) => r.isValid)?.contentType).toBe("Binary");
   });
 

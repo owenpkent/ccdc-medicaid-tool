@@ -51,9 +51,7 @@ describe("Terms of Use waiver clause", () => {
   it("keeps the maximum-permitted-by-law release in both languages", () => {
     const flat = allStrings(TERMS);
     expect(flat.some((s) => /fullest extent permitted by law/i.test(s.en))).toBe(true);
-    expect(flat.some((s) => /m[áa]xima medida permitida por la ley/i.test(s.es ?? ""))).toBe(
-      true,
-    );
+    expect(flat.some((s) => /m[áa]xima medida permitida por la ley/i.test(s.es ?? ""))).toBe(true);
   });
 
   it("disclaims warranties and caps liability at zero", () => {

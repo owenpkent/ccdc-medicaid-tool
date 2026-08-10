@@ -42,9 +42,7 @@ function getZxing(): Promise<ZxingReader> {
  * the language model for each would make every scan pay seconds of startup.
  * The model lives in memory only; cacheMethod: "none" keeps tesseract from
  * persisting it, same as lib/ocr.ts (see docs/privacy.md). */
-type TesseractWorker = Awaited<
-  ReturnType<typeof import("tesseract.js").createWorker>
->;
+type TesseractWorker = Awaited<ReturnType<typeof import("tesseract.js").createWorker>>;
 let workerPromise: Promise<TesseractWorker> | null = null;
 function getOcrWorker(): Promise<TesseractWorker> {
   workerPromise ??= import("tesseract.js").then(({ createWorker }) =>
@@ -60,9 +58,7 @@ function getOcrWorker(): Promise<TesseractWorker> {
 
 async function ocr(input: Blob | HTMLCanvasElement): Promise<string> {
   const worker = await getOcrWorker();
-  const { data } = await worker.recognize(
-    input as Parameters<TesseractWorker["recognize"]>[0],
-  );
+  const { data } = await worker.recognize(input as Parameters<TesseractWorker["recognize"]>[0]);
   return data.text ?? "";
 }
 
@@ -73,9 +69,7 @@ async function ocrDigits(input: Blob | HTMLCanvasElement): Promise<string> {
   const worker = await getOcrWorker();
   await worker.setParameters({ tessedit_char_whitelist: "0123456789 -" });
   try {
-    const { data } = await worker.recognize(
-      input as Parameters<TesseractWorker["recognize"]>[0],
-    );
+    const { data } = await worker.recognize(input as Parameters<TesseractWorker["recognize"]>[0]);
     return data.text ?? "";
   } finally {
     await worker.setParameters({ tessedit_char_whitelist: "" });
@@ -140,10 +134,7 @@ function grayContrast(d: Uint8ClampedArray): void {
   let max = 0;
   for (let i = 0; i < d.length; i += 4) {
     const g =
-      (0.299 * (d[i] as number) +
-        0.587 * (d[i + 1] as number) +
-        0.114 * (d[i + 2] as number)) |
-      0;
+      (0.299 * (d[i] as number) + 0.587 * (d[i + 1] as number) + 0.114 * (d[i + 2] as number)) | 0;
     d[i] = g;
     if (g < min) min = g;
     if (g > max) max = g;
@@ -160,33 +151,20 @@ function grayContrast(d: Uint8ClampedArray): void {
  * result = pixel + amount * (pixel - blurred). Defaults match what was measured
  * to decode a real license photo.
  */
-function unsharp(
-  d: Uint8ClampedArray,
-  w: number,
-  h: number,
-  sigma = 2,
-  amount = 2,
-): void {
+function unsharp(d: Uint8ClampedArray, w: number, h: number, sigma = 2, amount = 2): void {
   const n = w * h;
   const gray = new Float32Array(n);
   for (let i = 0; i < n; i++) gray[i] = d[i * 4] as number;
 
   const blurred = gaussianBlur(gray, w, h, sigma);
   for (let i = 0; i < n; i++) {
-    const v =
-      (gray[i] as number) +
-      amount * ((gray[i] as number) - (blurred[i] as number));
+    const v = (gray[i] as number) + amount * ((gray[i] as number) - (blurred[i] as number));
     d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v < 0 ? 0 : v > 255 ? 255 : v;
   }
 }
 
 // Separable Gaussian. Two 1-D passes, so cost stays linear in pixels.
-function gaussianBlur(
-  src: Float32Array,
-  w: number,
-  h: number,
-  sigma: number,
-): Float32Array {
+function gaussianBlur(src: Float32Array, w: number, h: number, sigma: number): Float32Array {
   const r = Math.max(1, Math.ceil(sigma * 2));
   const k = new Float32Array(2 * r + 1);
   let sum = 0;
@@ -245,8 +223,7 @@ async function decodePdf417(input: Blob) {
 
 function licenseResult(text: string): ScanResult {
   const fields = parseAamva(text);
-  if (!fields)
-    throw new Error("Barcode decoded but it does not look like license data.");
+  if (!fields) throw new Error("Barcode decoded but it does not look like license data.");
   return { fields, source: "Driver's license barcode" };
 }
 

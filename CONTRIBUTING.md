@@ -76,15 +76,24 @@ npm run preview    # serve the production build locally
 npm run test       # run Vitest once (includes axe-core a11y checks; use before opening a PR)
 npm run test:watch # run Vitest in watch mode while developing
 
-npm run lint       # ESLint with eslint-plugin-jsx-a11y; warnings fail the run
-npm run format     # Prettier write across src
+npm run lint         # ESLint with eslint-plugin-jsx-a11y; warnings fail the run
+npm run format       # Prettier write across src
+npm run format:check # Prettier check only; this is what CI runs
 ```
 
-Before you open a PR, make sure both of these pass:
+Prettier is configured at the repo root (`.prettierrc.json`) with `printWidth: 100`,
+chosen because it is closest to how the code was already written. CI fails on
+unformatted code, so run `npm run format` before you push. Two lookup tables
+(`MONTHS` in `lib/deadline.ts`, `STATE_NAMES` in `lib/fill/forms/i9.ts`) carry
+`// prettier-ignore` because they read better as tables; reach for that sparingly.
+`src/lib/rules.generated.ts` is in `.prettierignore` since `gen:rules` rewrites it.
+
+Before you open a PR, make sure all three of these pass:
 
 ```bash
 npm run test
 npm run lint
+npm run format:check
 ```
 
 These are the same checks CI runs, so passing them locally means a green PR.

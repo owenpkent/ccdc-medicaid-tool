@@ -113,7 +113,9 @@ export async function importPacket2026(bytes: ArrayBuffer | Uint8Array): Promise
   n += put(p, "county", text(form, "Attendant physical address county"));
 
   const mailStreet = text(form, "Attendant mailing address not PO Box");
-  if (checked(form, "Check the box if the address where you live is the same as your mailing address")) {
+  if (
+    checked(form, "Check the box if the address where you live is the same as your mailing address")
+  ) {
     p.mailingSame = true;
   } else if (mailStreet) {
     p.mailingSame = false;
@@ -129,10 +131,14 @@ export async function importPacket2026(bytes: ArrayBuffer | Uint8Array): Promise
   n += put(p, "otherPhone", text(form, "Attendant home or other phone"));
   n += put(p, "primaryLanguage", text(form, "Attendant primary language"));
   n += put(p, "bestContactTimes", text(form, "Best contact times for the attendant"));
-  if (checked(form, "The attendant prefers to be contacted by email")) n += put(p, "contactPreference", "email");
-  else if (checked(form, "The attendant prefers to be contacted by cell phone")) n += put(p, "contactPreference", "cell");
-  else if (checked(form, "The attendant prefers to be contacted by home phone")) n += put(p, "contactPreference", "home");
-  else if (checked(form, "The attendant prefers to be contacted by mail")) n += put(p, "contactPreference", "mail");
+  if (checked(form, "The attendant prefers to be contacted by email"))
+    n += put(p, "contactPreference", "email");
+  else if (checked(form, "The attendant prefers to be contacted by cell phone"))
+    n += put(p, "contactPreference", "cell");
+  else if (checked(form, "The attendant prefers to be contacted by home phone"))
+    n += put(p, "contactPreference", "home");
+  else if (checked(form, "The attendant prefers to be contacted by mail"))
+    n += put(p, "contactPreference", "mail");
   if (checked(form, "Do you want PPL to text you: Yes")) n += put(p, "allowText", "yes");
   else if (checked(form, "Do you want PPL to text you: No")) n += put(p, "allowText", "no");
 
@@ -162,12 +168,19 @@ export async function importPacket2026(bytes: ArrayBuffer | Uint8Array): Promise
 
   // ---- Tax-exemption attestations -> relation to employer ----
   if (checked(form, "I am the spouse of the employer")) n += put(p, "relationToEmployer", "spouse");
-  else if (checked(form, "I am the parent of the employer")) n += put(p, "relationToEmployer", "parent");
-  else if (checked(form, "I am the biological or legally adopted child of the employer and I am under the age of 21"))
+  else if (checked(form, "I am the parent of the employer"))
+    n += put(p, "relationToEmployer", "parent");
+  else if (
+    checked(
+      form,
+      "I am the biological or legally adopted child of the employer and I am under the age of 21",
+    )
+  )
     n += put(p, "relationToEmployer", "child");
   else if (checked(form, "I am not the spouse parent or child of the employer"))
     n += put(p, "relationToEmployer", "none");
-  if (checked(form, "I am under 18 years old and I am a fulltime student")) n += put(p, "fullTimeStudent", true);
+  if (checked(form, "I am under 18 years old and I am a fulltime student"))
+    n += put(p, "fullTimeStudent", true);
 
   // ---- EVV live-in attestation (the packet only distinguishes "live-in") ----
   if (checked(form, "Livein Caregiver Enter the shared residential address then skip to section 7"))
@@ -178,7 +191,12 @@ export async function importPacket2026(bytes: ArrayBuffer | Uint8Array): Promise
   else if (checked(form, "CB_2")) n += put(p, "citizenship", "national");
   else if (checked(form, "CB_3")) n += put(p, "citizenship", "lpr");
   else if (checked(form, "CB_4")) n += put(p, "citizenship", "alien");
-  n += put(p, "uscisNumber", text(form, "3 A lawful permanent resident Enter USCIS or ANumber") || text(form, "USCIS ANumber"));
+  n += put(
+    p,
+    "uscisNumber",
+    text(form, "3 A lawful permanent resident Enter USCIS or ANumber") ||
+      text(form, "USCIS ANumber"),
+  );
   n += put(p, "workAuthExpiration", isoFromDate(text(form, "Exp Date mmddyyyy")));
   n += put(p, "i94Number", text(form, "Form I94 Admission Number"));
   n += put(p, "foreignPassport", text(form, "Foreign Passport Number and Country of IssuanceRow1"));

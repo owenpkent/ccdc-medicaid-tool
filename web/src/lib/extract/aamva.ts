@@ -156,9 +156,7 @@ export function titleCase(s: string | undefined): string {
     .replace(/(^|[\s\-'])\w/g, (c) => c.toUpperCase());
 }
 
-export function clean(
-  obj: Record<string, string | undefined>,
-): IdFields | null {
+export function clean(obj: Record<string, string | undefined>): IdFields | null {
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(obj)) if (v) out[k] = v;
   return Object.keys(out).length ? (out as IdFields) : null;

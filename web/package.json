@@ -18,7 +18,8 @@
     "pretest:watch": "npm run gen:rules && npm run vendor:ocr",
     "test:watch": "vitest",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,md,json}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,md,json}\""
   },
   "dependencies": {
     "pdf-lib": "^1.17.1",

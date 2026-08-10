@@ -1,0 +1,13 @@
+# Prettier resolves this file relative to the working directory, not to the
+# config file, and every format script runs from web/. A copy at the repo root
+# would be silently ignored.
+
+# Generated, not authored. scripts/gen-rules.mjs rewrites this on every
+# predev/prebuild/pretest, so formatting it here would be undone on the next
+# run and reappear as spurious diff noise. Fix the generator, not the file.
+src/lib/rules.generated.ts
+
+# Build output and vendored third-party assets.
+dist/
+dev-dist/
+public/vendor/

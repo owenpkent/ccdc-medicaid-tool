@@ -102,7 +102,15 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
     const h = Math.min(0.25, displayH / vp.height);
     setSignatures((prev) => [
       ...prev,
-      { id: `sig-${++seq}`, page: placePage, dataUrl: pending.dataUrl, x: 0.5 - w / 2, y: 0.72, w, h },
+      {
+        id: `sig-${++seq}`,
+        page: placePage,
+        dataUrl: pending.dataUrl,
+        x: 0.5 - w / 2,
+        y: 0.72,
+        w,
+        h,
+      },
     ]);
     setPending(null);
   };
@@ -135,14 +143,26 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
 
   return (
     <div className="pdf-review">
-      <div className="pdf-review-toolbar" role="toolbar" aria-label={intl.formatMessage({ id: "sign.toolbar" })}>
-        <Button className="btn btn-secondary" isDisabled={!doc} onPress={() => setScale((s) => Math.max(MIN_SCALE, s / STEP))}>
+      <div
+        className="pdf-review-toolbar"
+        role="toolbar"
+        aria-label={intl.formatMessage({ id: "sign.toolbar" })}
+      >
+        <Button
+          className="btn btn-secondary"
+          isDisabled={!doc}
+          onPress={() => setScale((s) => Math.max(MIN_SCALE, s / STEP))}
+        >
           <FormattedMessage id="sign.zoomOut" />
         </Button>
         <span className="pdf-review-zoom" aria-live="polite">
           {Math.round(scale * 100)}%
         </span>
-        <Button className="btn btn-secondary" isDisabled={!doc} onPress={() => setScale((s) => Math.min(MAX_SCALE, s * STEP))}>
+        <Button
+          className="btn btn-secondary"
+          isDisabled={!doc}
+          onPress={() => setScale((s) => Math.min(MAX_SCALE, s * STEP))}
+        >
           <FormattedMessage id="sign.zoomIn" />
         </Button>
         <Button className="btn btn-secondary" isDisabled={!doc} onPress={fitWidth}>
@@ -189,7 +209,11 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
         </div>
       )}
 
-      <div className="pdf-review-scroll" ref={containerRef} aria-label={intl.formatMessage({ id: "sign.previewLabel" })}>
+      <div
+        className="pdf-review-scroll"
+        ref={containerRef}
+        aria-label={intl.formatMessage({ id: "sign.previewLabel" })}
+      >
         {doc &&
           pages.map((p) => (
             <PageView
@@ -210,7 +234,11 @@ export function PdfReview({ bytes, onConfirm, onBack }: Props) {
         <Button className="btn btn-secondary" isDisabled={busy} onPress={onBack}>
           <FormattedMessage id="sign.back" />
         </Button>
-        <Button className="btn btn-primary" isDisabled={busy || !doc} onPress={() => void confirm()}>
+        <Button
+          className="btn btn-primary"
+          isDisabled={busy || !doc}
+          onPress={() => void confirm()}
+        >
           <FormattedMessage id={busy ? "sign.saving" : "sign.download"} />
         </Button>
       </div>
@@ -231,7 +259,16 @@ interface PageViewProps {
   pageLabel: string;
 }
 
-function PageView({ doc, page, scale, sigs, onMove, onRemove, removeLabel, pageLabel }: PageViewProps) {
+function PageView({
+  doc,
+  page,
+  scale,
+  sigs,
+  onMove,
+  onRemove,
+  removeLabel,
+  pageLabel,
+}: PageViewProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
@@ -272,7 +309,10 @@ function PageView({ doc, page, scale, sigs, onMove, onRemove, removeLabel, pageL
     if (!visible || !dims) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    void doc.getPage(page).then((p) => renderPageToCanvas(p, canvas, scale)).catch(() => {});
+    void doc
+      .getPage(page)
+      .then((p) => renderPageToCanvas(p, canvas, scale))
+      .catch(() => {});
   }, [visible, dims, doc, page, scale]);
 
   return (
@@ -283,7 +323,13 @@ function PageView({ doc, page, scale, sigs, onMove, onRemove, removeLabel, pageL
     >
       <canvas ref={canvasRef} className="pdf-review-canvas" role="img" aria-label={pageLabel} />
       {sigs.map((s) => (
-        <SignatureItem key={s.id} sig={s} onMove={onMove} onRemove={onRemove} removeLabel={removeLabel} />
+        <SignatureItem
+          key={s.id}
+          sig={s}
+          onMove={onMove}
+          onRemove={onRemove}
+          removeLabel={removeLabel}
+        />
       ))}
     </div>
   );
@@ -301,7 +347,9 @@ const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(mi
 function SignatureItem({ sig, onMove, onRemove, removeLabel }: SignatureItemProps) {
   const startDrag = (e: ReactPointerEvent<HTMLImageElement>) => {
     if (e.button !== 0) return;
-    const pageRect = (e.currentTarget.closest(".pdf-review-page") as HTMLElement | null)?.getBoundingClientRect();
+    const pageRect = (
+      e.currentTarget.closest(".pdf-review-page") as HTMLElement | null
+    )?.getBoundingClientRect();
     if (!pageRect) return;
     e.preventDefault();
     const startX = e.clientX;

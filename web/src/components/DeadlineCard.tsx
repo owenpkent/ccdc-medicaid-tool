@@ -19,10 +19,7 @@ export function DeadlineCard({ classification }: { classification: LetterClassif
     const dateText = formatLongDate(deadlineISO, locale);
 
     return (
-      <section
-        className={`deadline-card deadline-${urgency}`}
-        aria-labelledby="deadline-heading"
-      >
+      <section className={`deadline-card deadline-${urgency}`} aria-labelledby="deadline-heading">
         <h3 id="deadline-heading" className="deadline-label">
           <FormattedMessage id="deadline.heading" />
         </h3>

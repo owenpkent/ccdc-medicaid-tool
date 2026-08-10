@@ -86,7 +86,11 @@ export async function fillPacket2026(
   setText(form, "Attendant physical address county", p.county);
 
   if (p.mailingSame) {
-    check(form, "Check the box if the address where you live is the same as your mailing address", true);
+    check(
+      form,
+      "Check the box if the address where you live is the same as your mailing address",
+      true,
+    );
   } else {
     setText(form, "Attendant mailing address not PO Box", p.mailStreet);
     setText(form, "Attendant mailing address 2 Apt Ste or other", p.mailStreet2);
@@ -100,8 +104,16 @@ export async function fillPacket2026(
   setText(form, "Attendant home or other phone", p.otherPhone);
   setText(form, "Attendant primary language", p.primaryLanguage);
   check(form, "The attendant prefers to be contacted by email", p.contactPreference === "email");
-  check(form, "The attendant prefers to be contacted by cell phone", p.contactPreference === "cell");
-  check(form, "The attendant prefers to be contacted by home phone", p.contactPreference === "home");
+  check(
+    form,
+    "The attendant prefers to be contacted by cell phone",
+    p.contactPreference === "cell",
+  );
+  check(
+    form,
+    "The attendant prefers to be contacted by home phone",
+    p.contactPreference === "home",
+  );
   check(form, "The attendant prefers to be contacted by mail", p.contactPreference === "mail");
   setText(form, "Best contact times for the attendant", p.bestContactTimes);
   if (p.allowText === "yes") selectButton(form, "Do you want PPL to text you: Yes", "Yes");
@@ -124,8 +136,22 @@ export async function fillPacket2026(
   } else {
     check(form, "Payment by Paper Check", true);
     const mail = p.mailingSame
-      ? { street: p.street, street2: p.street2, city: p.city, state: p.state, zip: p.zip, county: p.county }
-      : { street: p.mailStreet, street2: p.mailStreet2, city: p.mailCity, state: p.mailState, zip: p.mailZip, county: "" };
+      ? {
+          street: p.street,
+          street2: p.street2,
+          city: p.city,
+          state: p.state,
+          zip: p.zip,
+          county: p.county,
+        }
+      : {
+          street: p.mailStreet,
+          street2: p.mailStreet2,
+          city: p.mailCity,
+          state: p.mailState,
+          zip: p.mailZip,
+          county: "",
+        };
     setText(form, "Address", mail.street);
     setText(form, ", or other)", mail.street2); // truncated label for "Address 2 (Apt., Ste., or other)"
     setText(form, "City", mail.city);
@@ -138,7 +164,11 @@ export async function fillPacket2026(
 
   // ---- Page 10: Services and rates ----
   check(form, "New Service", opts.newService);
-  check(form, "Change Hourly Rate: only mark if the attendant is already working", !opts.newService);
+  check(
+    form,
+    "Change Hourly Rate: only mark if the attendant is already working",
+    !opts.newService,
+  );
   setText(form, "CDASS Standard Rate", p.rateStandardCdass);
   setText(form, "CDASS Emergency Rate", p.rateEmergencyCdass);
   // SLS Health Maintenance rate boxes are intentionally left blank: this app
@@ -157,8 +187,16 @@ export async function fillPacket2026(
     "I am the biological or legally adopted child of the employer and I am under the age of 21",
     p.relationToEmployer === "child" && years != null && years < 21,
   );
-  check(form, "I am not the spouse parent or child of the employer", p.relationToEmployer === "none");
-  check(form, "I am under 18 years old and I am a fulltime student", p.fullTimeStudent && years != null && years < 18);
+  check(
+    form,
+    "I am not the spouse parent or child of the employer",
+    p.relationToEmployer === "none",
+  );
+  check(
+    form,
+    "I am under 18 years old and I am a fulltime student",
+    p.fullTimeStudent && years != null && years < 18,
+  );
   check(
     form,
     "I am under 18 years old and this job of performing household services (respite) is my primary job",
@@ -174,16 +212,30 @@ export async function fillPacket2026(
     setText(form, "Last Name_2", p.last);
     setText(form, "Last 5 SSN", (p.ssn ?? "").replace(/\D/g, "").slice(-5));
     if (["spouse", "parent", "child"].includes(p.relationToEmployer))
-      setText(form, "If yes describe their relationship parent spouse sibling etc", p.relationToEmployer);
+      setText(
+        form,
+        "If yes describe their relationship parent spouse sibling etc",
+        p.relationToEmployer,
+      );
     setText(form, "Billing Provider or FMS Vendor name", "Public Partnerships LLC");
-    check(form, "Livein Caregiver Enter the shared residential address then skip to section 7", true);
+    check(
+      form,
+      "Livein Caregiver Enter the shared residential address then skip to section 7",
+      true,
+    );
     setText(form, "Street Address", p.street);
     // City or Town / State / ZIP Code are shared with the I-9 employee address
     // and get filled by fillI9 below with the same (shared) address.
   }
 
   // ---- Pages 19-22: I-9 ----
-  fillI9(form, p, emp, { ...(opts.firstDay !== undefined ? { firstDay: opts.firstDay } : {}) }, sig);
+  fillI9(
+    form,
+    p,
+    emp,
+    { ...(opts.firstDay !== undefined ? { firstDay: opts.firstDay } : {}) },
+    sig,
+  );
 
   form.updateFieldAppearances();
   await overlaySignature(doc, emp.signature, EMPLOYER_SIGNATURE);
@@ -206,6 +258,10 @@ function age(dobIso: string): number | null {
   if (isNaN(dob.getTime())) return null;
   const now = new Date();
   let a = now.getFullYear() - dob.getFullYear();
-  if (now.getMonth() < dob.getMonth() || (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate())) a--;
+  if (
+    now.getMonth() < dob.getMonth() ||
+    (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate())
+  )
+    a--;
   return a;
 }

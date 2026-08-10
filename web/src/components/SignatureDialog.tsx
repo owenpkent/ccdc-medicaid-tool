@@ -170,7 +170,11 @@ export function SignatureDialog({ isOpen, onOpenChange, onCreate }: Props) {
                 <FormattedMessage id="sign.dialogTitle" />
               </h2>
 
-              <div className="sig-tabs" role="tablist" aria-label={intl.formatMessage({ id: "sign.dialogTitle" })}>
+              <div
+                className="sig-tabs"
+                role="tablist"
+                aria-label={intl.formatMessage({ id: "sign.dialogTitle" })}
+              >
                 <button
                   type="button"
                   role="tab"

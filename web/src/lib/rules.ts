@@ -81,7 +81,9 @@ function scoreRule(rule: (typeof LETTER_RULES)[number], norm: string): Scored {
   // than inflating the score (and the confidence band) off a single phrase.
   const matched = raw.filter((p) => {
     const np = normalize(p);
-    return !raw.some((q) => q !== p && normalize(q).length > np.length && normalize(q).includes(np));
+    return !raw.some(
+      (q) => q !== p && normalize(q).length > np.length && normalize(q).includes(np),
+    );
   });
   return { rule, score: matched.length, matched };
 }

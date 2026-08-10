@@ -11,15 +11,7 @@
  */
 
 export type FieldType =
-  | "text"
-  | "date"
-  | "ssn"
-  | "phone"
-  | "email"
-  | "select"
-  | "checkbox"
-  | "money"
-  | "signature";
+  "text" | "date" | "ssn" | "phone" | "email" | "select" | "checkbox" | "money" | "signature";
 
 export interface ProfileField {
   key: string;
@@ -236,7 +228,12 @@ export const PROFILE_SECTIONS: ProfileSection[] = [
     id: "payment",
     title: "Payment",
     fields: [
-      { key: "directDeposit", label: "Direct deposit to bank account", type: "checkbox", default: true },
+      {
+        key: "directDeposit",
+        label: "Direct deposit to bank account",
+        type: "checkbox",
+        default: true,
+      },
       {
         key: "sameAccountAllMembers",
         label: "Use the same account for all Members they work for",
@@ -309,15 +306,30 @@ export const PROFILE_SECTIONS: ProfileSection[] = [
         ],
       },
       { key: "fullTimeStudent", label: "Full-time student", type: "checkbox" },
-      { key: "primaryJob", label: "This household/respite job is their primary job", type: "checkbox" },
+      {
+        key: "primaryJob",
+        label: "This household/respite job is their primary job",
+        type: "checkbox",
+      },
     ],
   },
   {
     id: "rates",
     title: "Pay rates (CDASS, $/hour)",
     fields: [
-      { key: "rateStandardCdass", label: "Standard rate (per attendant)", type: "money", placeholder: "e.g. 18" },
-      { key: "rateEmergencyCdass", label: "Emergency rate", type: "money", default: "45", placeholder: "45" },
+      {
+        key: "rateStandardCdass",
+        label: "Standard rate (per attendant)",
+        type: "money",
+        placeholder: "e.g. 18",
+      },
+      {
+        key: "rateEmergencyCdass",
+        label: "Emergency rate",
+        type: "money",
+        default: "45",
+        placeholder: "45",
+      },
     ],
   },
   {
@@ -336,10 +348,25 @@ export const PROFILE_SECTIONS: ProfileSection[] = [
           ["alien", "Noncitizen authorized to work"],
         ],
       },
-      { key: "uscisNumber", label: "USCIS / A-Number (if LPR or authorized)", type: "text", sensitive: true },
-      { key: "workAuthExpiration", label: "Work authorization expiration", type: "date", sensitive: true },
+      {
+        key: "uscisNumber",
+        label: "USCIS / A-Number (if LPR or authorized)",
+        type: "text",
+        sensitive: true,
+      },
+      {
+        key: "workAuthExpiration",
+        label: "Work authorization expiration",
+        type: "date",
+        sensitive: true,
+      },
       { key: "i94Number", label: "Form I-94 admission number", type: "text", sensitive: true },
-      { key: "foreignPassport", label: "Foreign passport number and country", type: "text", sensitive: true },
+      {
+        key: "foreignPassport",
+        label: "Foreign passport number and country",
+        type: "text",
+        sensitive: true,
+      },
     ],
   },
   {
@@ -373,7 +400,11 @@ export const PROFILE_SECTIONS: ProfileSection[] = [
       { key: "otherDependentsCredit", label: "Step 3: other dependents credit ($)", type: "money" },
       { key: "otherIncome", label: "Step 4(a): other income ($)", type: "money" },
       { key: "deductions", label: "Step 4(b): deductions ($)", type: "money" },
-      { key: "extraWithholding", label: "Step 4(c): extra withholding per period ($)", type: "money" },
+      {
+        key: "extraWithholding",
+        label: "Step 4(c): extra withholding per period ($)",
+        type: "money",
+      },
     ],
   },
 ];
@@ -397,7 +428,11 @@ export const EMPLOYER_SECTIONS: ProfileSection[] = [
       { key: "employerLast", label: "Employer last name", type: "text" },
       { key: "employerTitle", label: "Employer title", type: "text", placeholder: "Employer" },
       { key: "businessName", label: "Business or organization name (I-9 / W-4)", type: "text" },
-      { key: "businessAddress", label: "Business address (street, city, state, ZIP)", type: "text" },
+      {
+        key: "businessAddress",
+        label: "Business address (street, city, state, ZIP)",
+        type: "text",
+      },
       { key: "ein", label: "EIN (W-4)", type: "text" },
       {
         key: "signature",
@@ -415,7 +450,8 @@ export const EMPLOYER_SECTIONS: ProfileSection[] = [
 export function blankProfile(): Profile {
   const p: Record<string, string | boolean> = { id: crypto.randomUUID() };
   for (const s of PROFILE_SECTIONS)
-    for (const f of s.fields) p[f.key] = f.type === "checkbox" ? (f.default ?? false) : (f.default ?? "");
+    for (const f of s.fields)
+      p[f.key] = f.type === "checkbox" ? (f.default ?? false) : (f.default ?? "");
   return p as unknown as Profile;
 }
 

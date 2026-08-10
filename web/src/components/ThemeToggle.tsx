@@ -5,8 +5,7 @@ type ThemeOverride = "light" | "dark" | null;
 
 function systemPrefersDark(): boolean {
   return (
-    typeof window !== "undefined" &&
-    !!window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    typeof window !== "undefined" && !!window.matchMedia?.("(prefers-color-scheme: dark)").matches
   );
 }
 
